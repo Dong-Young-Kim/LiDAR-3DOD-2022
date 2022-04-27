@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(Lidar_process_div)
+project(Lidar_3DOD_2022)
 
 find_package(catkin REQUIRED COMPONENTS
    roscpp

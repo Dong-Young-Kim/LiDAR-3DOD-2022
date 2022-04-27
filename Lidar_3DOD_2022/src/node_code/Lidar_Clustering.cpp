@@ -1,4 +1,4 @@
-#include <Lidar_process_div/Lidar_declare.h>
+#include <Lidar_3DOD_2022/Lidar_declare.h>
 
 using namespace std;
 
@@ -7,16 +7,16 @@ void Clustering_process(const sensor_msgs::PointCloud2ConstPtr& aft_ransac){
     pcl::fromROSMsg(*aft_ransac,tmp);
     PCXYZI::Ptr upsampledCloud (new PCXYZI);;
     copyPointCloud(tmp,*upsampledCloud);
-    //-----------post_NoiseFiltering-----------
-    PCXYZI::Ptr postfilteredCloud (new PCXYZI); //saving spcae for filteredData
-    if( switch_NoiseFiltering ) NoiseFiltering( upsampledCloud, postfilteredCloud); //call NoiseFiltering func  ////  current : on
-    else postfilteredCloud = upsampledCloud;
-    //-----------post_clustering------------
+    //-----------NoiseFiltering-----------
+    PCXYZI::Ptr filteredCloud (new PCXYZI); //saving spcae for filteredData
+    if( switch_NoiseFiltering ) NoiseFiltering( upsampledCloud, filteredCloud); //call NoiseFiltering func  ////  current : on
+    else filteredCloud = upsampledCloud;
+    //-----------clustering------------
     PCXYZI Fin_Cloud;
-    if( switch_DBscan ) DBScanClustering( postfilteredCloud, Fin_Cloud); //prior DBSCAN
-    else if( switch_Euclid ) EuclideanClustering( postfilteredCloud, Fin_Cloud );
+    if( switch_DBscan ) DBScanClustering( filteredCloud, Fin_Cloud); //prior DBSCAN
+    else if( switch_Euclid ) EuclideanClustering( filteredCloud, Fin_Cloud );
     else{
-        Fin_Cloud = *postfilteredCloud;
+        Fin_Cloud = *filteredCloud;
         sensor_msgs::PointCloud2 output; 
         pub_process(Fin_Cloud,output);
         pub_DBscan.publish(output);        
@@ -47,9 +47,9 @@ int main(int argc, char** argv){
     nh.getParam("/Clustering_node/REMOVE_FACTOR", REMOVE_FACTOR);
 
 	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/2_1_velodyne_points_ransac", 100, Clustering_process);
-    if( switch_Euclid && !switch_DBscan ) pub_Euclid = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Euclid", 1);
-    else if( switch_DBscan ) pub_DBscan = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_DBSCAN", 1);
-    pub_msg = nh.advertise<std_msgs::String> ("/Lidar_msg",1); 
+    if( switch_Euclid && !switch_DBscan ) pub_Euclid = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 10);
+    else if( switch_DBscan ) pub_DBscan = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 10);
+    pub_msg = nh.advertise<std_msgs::String> ("/Lidar_msg",10); 
 
     //OUT_MSG = nh.advertise<Lidar_pkg::Lidar_msg> ("/lidar_detected_object", 1);
     //<패키지 명/메시지 파일 명>

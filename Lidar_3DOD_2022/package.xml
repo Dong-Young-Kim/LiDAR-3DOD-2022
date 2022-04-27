@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>Lidar_process_div</name>
+  <name>Lidar_3DOD_2022</name>
   <version>0.0.0</version>
-  <description>The Lidar_process_div package</description>
+  <description>The Lidar_3DOD_2022 package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

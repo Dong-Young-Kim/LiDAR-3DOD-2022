@@ -40,7 +40,7 @@
 #include <pcl/surface/impl/mls.hpp>
 #include <pcl/visualization/cloud_viewer.h>
 #include <pcl/visualization/pcl_visualizer.h>
-#include <Lidar_process_div/SDW_DBSCAN.h>
+#include <Lidar_3DOD_2022/SDW_DBSCAN.h>
 //#include <Lidar_process_div/DBSCAN_hanbin.h>
 //#include "Lidar_pkg/Lidar_msg.h"  //include "패키지 명/메시지 파일 명.h"
 
@@ -78,6 +78,7 @@ bool switch_Euclid;
 bool switch_UpSampling;
 bool switch_RanSaC;
 bool switch_DBscan;
+bool switch_visual;
 
 //func
 void ROI(const sensor_msgs::PointCloud2ConstPtr&);

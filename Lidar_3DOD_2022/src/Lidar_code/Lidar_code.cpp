@@ -1,4 +1,4 @@
-#include <Lidar_process_div/Lidar_declare.h>
+#include <Lidar_3DOD_2022/Lidar_declare.h>
 
 
 using namespace std;
@@ -120,7 +120,7 @@ void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
     PCXYZI::Ptr new_point(new PCXYZI);
     vector<pcl::PointIndices> cluster_indices;           // saving place for clustering obj
     
-    DBSCANclu<PXYZI> DB;
+    DBSCAN<PXYZI> DB;
     DB.setCorePointMinPts(DBscan_minPts);                // minimum points of cluster judge
     DB.setClusterTolerance(DBscan_eps);                  // dist between points
     DB.setMinClusterSize(DB_MinClusterSize);		     // minSize the number of point for clustering

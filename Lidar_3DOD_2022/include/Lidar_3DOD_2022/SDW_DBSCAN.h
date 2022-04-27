@@ -29,7 +29,7 @@ inline bool comparePointClusters_hb (const pcl::PointIndices &a, const pcl::Poin
 }
 
 class PointInfo{ 
-    template<typename PointT> friend class DBSCANclu;
+    template<typename PointT> friend class DBSCAN;
 public:
     int self_idx;
     int ID;
@@ -59,6 +59,9 @@ public:
         if(cur_dist > 5){
             this -> eps += safe_coeff; //가까이에선 거의 오차가 없음. 오히려 기존 eps보다 안전계수가 커져버려서 과부하 발생
         }
+        else{
+            this -> eps += +0.02;
+        }
     }
 
     void get_nearPoint_info(){
@@ -68,7 +71,7 @@ public:
 
 
 template <typename PointT>
-class DBSCANclu {
+class DBSCAN {
 public:
     typedef typename pcl::PointCloud<PointT>::Ptr PointCloudPtr;
     typedef typename pcl::search::KdTree<PointT>::Ptr KdTreePtr;

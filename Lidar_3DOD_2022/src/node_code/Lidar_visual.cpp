@@ -1,4 +1,4 @@
-#include <Lidar_process_div/Lidar_declare.h>
+#include <Lidar_3DOD_2022/Lidar_declare.h>
 
 using namespace std;
 
@@ -18,16 +18,19 @@ void visual_process(const sensor_msgs::PointCloud2ConstPtr& aft_preClustering){
 int main(int argc, char** argv){
 	ros::init(argc, argv, "lidar_visual"); //node name 
 	ros::NodeHandle nh;         //nodehandle
-    /*
+    
+    nh.getParam("/visualization_node/switch_visual", switch_visual);
+    if (!switch_visual) exit(0);
+
     viewer = new pcl::visualization::PCLVisualizer("LiDAR Point Cloud Viewer");
     viewer->setBackgroundColor (0.1, 0.1, 0.15);
     viewer->initCameraParameters();
     viewer->setCameraPosition(-5.0, 5.0, 2.0,    6.0, -3.0, 0.0,   0.0, 0.0, 1.0);
     viewer->addCoordinateSystem (0.3f);    
 
-	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/4_velodyne_points_DBscan", 100, visual_process);   
+	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100, visual_process);   
     
-	ros::spin();
+	//ros::spin();
     
     while(!viewer->wasStopped()) {
         ros::spinOnce();    
@@ -35,5 +38,5 @@ int main(int argc, char** argv){
     }
 
     delete viewer;
-    */
+    
 }
