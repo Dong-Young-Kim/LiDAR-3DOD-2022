@@ -1,0 +1,57 @@
+<launch>
+
+  <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-f velodyne"/>
+
+  <node pkg="Lidar_process_div" type="Lidar_ROI" name="ROI_node">
+  <!--패키지 명, type => excutable file, cpp파일에 ROI_node로 되어있음-->
+    <!--ROI parameter-->
+    <param name="switch_ROI" value="true"/>
+    <param name="ROI_xMin" value="0"/>
+    <param name="ROI_xMax" value="15"/>
+    <param name="ROI_yMin" value="-3.5"/>
+    <param name="ROI_yMax" value="3.5"/>
+    <param name="ROI_zMin" value="-0.5"/>
+    <param name="ROI_zMax" value="1.2"/>
+  </node>
+
+  <node pkg="Lidar_process_div" type="Lidar_ransac" name="ransac_node">
+    <!--ransac parameter-->
+    <param name="switch_UpSampling" value="false"/>
+    <param name="switch_RanSaC" value="false"/>
+    <param name="ransac_distanceThreshold" value="0.07"/>
+  </node>
+
+  <node pkg="Lidar_process_div" type="Lidar_Clustering" name="Clustering_node" output="screen">
+	
+    <!--EuclidClustering parameter-->
+    <param name="switch_Euclid" value="false"/>
+    <param name="EC_eps" value="0.5"/>
+    <param name="EC_MinClusterSize" value="10"/>
+    <param name="EC_MaxClusterSize" value="100000"/>
+
+    <!--DBSCANclustering parameter-->
+    <param name="switch_DBscan" value="true"/>
+    <param name="DBscan_eps" value="0.15"/>
+    <param name="DBscan_minPts" value="3"/>
+    <param name="DB_MinClusterSize" value="5"/>
+    <param name="DB_MaxClusterSize" value="10000"/>
+
+    <!--NoiseFiltering parameter-->
+    <param name="switch_NoiseFiltering" value="true"/>
+
+    <!--Filter on/off-->    
+    <param name="switch_jiwon_filter" value="true"/>
+    <param name="switch_DY_filter" value="true"/>
+
+    <!--jiwonFilter parameter-->
+    <param name="REMOVE_FACTOR" value="0.2"/>
+
+    <!--DYFilter parameter-->
+    <param name="Ransac_Z_ROI" value="-0.7"/>
+  </node>
+
+  <node pkg="Lidar_process_div" type="Lidar_visual" name="visualization_node"/>
+
+</launch>
