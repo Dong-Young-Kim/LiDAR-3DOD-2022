@@ -9,6 +9,16 @@ find_package(catkin REQUIRED COMPONENTS
    message_generation
 )
 
+add_message_files(
+  FILES
+  obj_msg.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
+
 catkin_package(
   INCLUDE_DIRS include
   CATKIN_DEPENDS message_generation roscpp std_msgs

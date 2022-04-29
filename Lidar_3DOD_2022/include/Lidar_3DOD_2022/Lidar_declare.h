@@ -42,7 +42,7 @@
 #include <pcl/visualization/pcl_visualizer.h>
 #include <Lidar_3DOD_2022/SDW_DBSCAN.h>
 //#include <Lidar_process_div/DBSCAN_hanbin.h>
-//#include "Lidar_pkg/Lidar_msg.h"  //include "패키지 명/메시지 파일 명.h"
+#include "Lidar_3DOD_2022/obj_msg.h"  //include "패키지 명/메시지 파일 명.h"
 
 using namespace std;
 
@@ -57,6 +57,7 @@ ros::Publisher pub_RS;      //ransac
 ros::Publisher pub_GND;     //ground
 ros::Publisher pub_DBscan;  //DBscan
 ros::Publisher pub_msg;
+ros::Publisher pub_obj;     //user defined msg
 //ros::Publisher OUT_MSG;     //out message
 
 double REMOVE_FACTOR;

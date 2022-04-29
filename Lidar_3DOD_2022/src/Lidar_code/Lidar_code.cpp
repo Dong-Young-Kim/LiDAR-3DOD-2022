@@ -129,15 +129,20 @@ void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
     DB.setInputCloud(input_cloud);   	                 // setting ec with inputCloud
     DB.extract(cluster_indices);                         // save clusteringObj to cluster_indices
 
-    cout << "Number of clusters is equal to " << cluster_indices.size () << endl;    //return num of clusteringObj
+    cout << "Number of clusters is equal to " << cluster_indices.size() << endl;    //return num of clusteringObj
+
+    int cluSz = cluster_indices.size();
+    vector<float> obj_x(cluSz); vector<float> obj_y(cluSz); vector<float> obj_z(cluSz);
+    vector<float> obj_xMin(cluSz); vector<float> obj_yMin(cluSz); vector<float> obj_zMin(cluSz);
+    vector<float> obj_xMax(cluSz); vector<float> obj_yMax(cluSz); vector<float> obj_zMax(cluSz);
 
     vector<pair<PXYZI,string>> sorted_OBJ; 
     //temp print middle point 
     int j = 0;
     for (vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it, j++){
-        pair<float,float> x(9999,-9999); //first = min, second = max
-        pair<float,float> y(9999,-9999); 
-        pair<float,float> z(9999,-9999); 
+        pair<float,float> x(std::numeric_limits<float>::max(),-std::numeric_limits<float>::max()); //first = min, second = max
+        pair<float,float> y(std::numeric_limits<float>::max(),-std::numeric_limits<float>::max()); 
+        pair<float,float> z(std::numeric_limits<float>::max(),-std::numeric_limits<float>::max()); 
     	for (std::vector<int>::const_iterator pit = it->indices.begin(); pit != it->indices.end(); ++pit){
             PXYZI pt = input_cloud->points[*pit];
             pt.intensity = j % 10;
@@ -151,6 +156,11 @@ void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
     	}
         PXYZI* tmp = new PXYZI();
         tmp->x = MidPt(x.first,x.second); tmp->y = MidPt(y.first,y.second); tmp->z = z.first; //z = min
+
+        obj_x[j] = tmp->x; obj_y[j] = tmp->y; obj_z[j] = MidPt(z.first,z.second);
+        obj_xMin[j] = x.first; obj_yMin[j] = y.first; obj_zMin[j] = z.first;
+        obj_xMax[j] = x.second; obj_yMax[j] = y.second; obj_zMax[j] = z.second;
+
         pair<PXYZI,string> temp = make_pair(*tmp,send_msg_minmax(x.first, x.second, y.first, y.second));
         sorted_OBJ.push_back(temp);
     }
@@ -162,6 +172,17 @@ void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
     print_OBJ(sorted_OBJ);
     msg_process(sorted_OBJ);
     pub_DBscan.publish(output);
+
+    {//메시지 발행으로 임시로 넣어놓은 코드
+    Lidar_3DOD_2022::obj_msg msg;
+    msg.objc = cluSz;
+    msg.x = obj_x; msg.y = obj_y; msg.z = obj_z;
+    msg.xMin = obj_xMin; msg.yMin = obj_yMin; msg.zMin = obj_zMin;
+    msg.xMax = obj_xMax; msg.yMax = obj_yMax; msg.zMax = obj_zMax;
+
+    pub_obj.publish(msg);
+    }
+
 }
 
 void RanSaC(PCXYZI::Ptr inputCloud){

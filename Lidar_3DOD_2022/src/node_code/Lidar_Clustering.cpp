@@ -51,7 +51,7 @@ int main(int argc, char** argv){
     else if( switch_DBscan ) pub_DBscan = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 10);
     pub_msg = nh.advertise<std_msgs::String> ("/Lidar_msg",10); 
 
-    //OUT_MSG = nh.advertise<Lidar_pkg::Lidar_msg> ("/lidar_detected_object", 1);
+    pub_obj = nh.advertise<Lidar_3DOD_2022::obj_msg> ("/Lidar_obj", 10);
     //<패키지 명/메시지 파일 명>
 	ros::spin();
 }
