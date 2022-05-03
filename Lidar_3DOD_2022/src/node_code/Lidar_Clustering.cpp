@@ -3,6 +3,7 @@
 using namespace std;
 
 void Clustering_process(const sensor_msgs::PointCloud2ConstPtr& aft_ransac){
+    RT1.start();
     PCXYZI tmp;
     pcl::fromROSMsg(*aft_ransac,tmp);
     PCXYZI::Ptr upsampledCloud (new PCXYZI);;
@@ -21,12 +22,16 @@ void Clustering_process(const sensor_msgs::PointCloud2ConstPtr& aft_ransac){
         pub_process(Fin_Cloud,output);
         pub_DBscan.publish(output);        
     } 
+    RT1.end_cal("clustering");
     FPS1.update();
+    cout << "-------------------------------------------------" << endl;
 }
 
 int main(int argc, char** argv){
 	ros::init(argc, argv, "Clustering"); //node name 
 	ros::NodeHandle nh;         //nodehandle
+
+    
 
     nh.getParam("/Clustering_node/switch_NoiseFiltering", switch_NoiseFiltering);
     //Euclid
@@ -53,5 +58,6 @@ int main(int argc, char** argv){
 
     pub_obj = nh.advertise<Lidar_3DOD_2022::obj_msg> ("/Lidar_obj", 10);
     //<패키지 명/메시지 파일 명>
-	ros::spin();
+
+    ros::spin();
 }

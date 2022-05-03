@@ -4,6 +4,7 @@
 using namespace std;
 
 void ROI(const sensor_msgs::PointCloud2ConstPtr& scan){
+    RT1.start();
     PCXYZI rawData;
     pcl::fromROSMsg(*scan,rawData);
     if(switch_ROI) makeCropBox(rawData, ROI_xMin, ROI_xMax, ROI_yMin, ROI_yMax, ROI_zMin, ROI_zMax);
@@ -18,7 +19,7 @@ void makeCropBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax,
     boxfilter.setMax(Eigen::Vector4f(xMax, yMax, zMax, NULL));
     boxfilter.setInputCloud(Cloud.makeShared());
     boxfilter.filter(Cloud);
-
+    RT1.end_cal("ROI");
 }
 
 void UpSampling(PCXYZI& TotalCloud, PCXYZI::Ptr upsampledCloud){
@@ -129,7 +130,7 @@ void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
     DB.setInputCloud(input_cloud);   	                 // setting ec with inputCloud
     DB.extract(cluster_indices);                         // save clusteringObj to cluster_indices
 
-    cout << "Number of clusters is equal to " << cluster_indices.size() << endl;    //return num of clusteringObj
+    //cout << "Number of clusters is equal to " << cluster_indices.size() << endl;    //return num of clusteringObj
 
     int cluSz = cluster_indices.size();
     vector<float> obj_x(cluSz); vector<float> obj_y(cluSz); vector<float> obj_z(cluSz);
@@ -166,10 +167,10 @@ void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
     }
     sensor_msgs::PointCloud2 output; 
     pub_process(retCloud,output);
-    cout << "------------------ DF & JF ------------------" << endl;
+    //cout << "------------------ DF & JF ------------------" << endl;
     FT.DY_filter(sorted_OBJ, switch_DY_filter);
     FT.jiwon_filter(sorted_OBJ, switch_jiwon_filter);
-    print_OBJ(sorted_OBJ);
+    //print_OBJ(sorted_OBJ);
     msg_process(sorted_OBJ);
     pub_DBscan.publish(output);
 

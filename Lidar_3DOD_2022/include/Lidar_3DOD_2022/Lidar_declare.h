@@ -117,6 +117,17 @@ public:
 };
 Fps FPS1;
 
+class RT{
+public:
+    double prev_clock;
+    double cur_clock;
+    double interval;
+    RT();
+    void start();
+    void end_cal(const char*);
+};
+RT RT1;
+
 inline float cal_dist(float x, float y){ return sqrt(x*x+y*y); }
 inline float MidPt(float a, float b){ return (a + b) / 2; }
 inline void print_coord(PXYZI tmp){ cout << fixed << setprecision(3) <<"dist : " << cal_dist(tmp.x,tmp.y) << "    x : "<<tmp.x << "    y : "<< tmp.y <<endl; }
