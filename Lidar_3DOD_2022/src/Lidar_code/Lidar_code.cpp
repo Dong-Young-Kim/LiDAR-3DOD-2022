@@ -6,11 +6,22 @@ using namespace std;
 void ROI(const sensor_msgs::PointCloud2ConstPtr& scan){
     RT1.start();
     PCXYZI rawData;
+    PCXYZI cropedData;
     pcl::fromROSMsg(*scan,rawData);
-    if(switch_ROI) makeCropBox(rawData, ROI_xMin, ROI_xMax, ROI_yMin, ROI_yMax, ROI_zMin, ROI_zMax);
+    //if(switch_ROI) makeCropBox(rawData, ROI_xMin, ROI_xMax, ROI_yMin, ROI_yMax, ROI_zMin, ROI_zMax);
+    if(switch_ROI){
+        for(int i=0; i < rawData.points.size(); i++){
+            if(rawData.points[i].x > ROI_xMax || rawData.points[i].x < ROI_xMin
+            || rawData.points[i].y > ROI_yMax || rawData.points[i].y < ROI_yMin
+            || rawData.points[i].z > ROI_zMax || rawData.points[i].z < ROI_zMin) continue;
+            cropedData.push_back(rawData.points[i]);
+        }
+    }
+
     sensor_msgs::PointCloud2 output;                        //to output ROIdata formed PC2
-    pub_process(rawData,output);
+    pub_process(cropedData,output);
     pub_ROI.publish(output);
+    RT1.end_cal("ROI");
 }
 
 void makeCropBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax){
@@ -19,7 +30,6 @@ void makeCropBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax,
     boxfilter.setMax(Eigen::Vector4f(xMax, yMax, zMax, NULL));
     boxfilter.setInputCloud(Cloud.makeShared());
     boxfilter.filter(Cloud);
-    RT1.end_cal("ROI");
 }
 
 void UpSampling(PCXYZI& TotalCloud, PCXYZI::Ptr upsampledCloud){
