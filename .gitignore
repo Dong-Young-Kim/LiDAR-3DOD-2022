@@ -1,3 +1,5 @@
 
 *.json
 Lidar_3DOD_2022/.vscode/browse.vc.db
+*.db-shm
+*.db-wal
