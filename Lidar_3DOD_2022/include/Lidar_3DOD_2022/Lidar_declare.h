@@ -47,18 +47,18 @@
 #include "Lidar_3DOD_2022/obj_msg.h"  //include "패키지 명/메시지 파일 명.h"
 
 //---------------------------------------------------
-//#include <opencv2/video/tracking.hpp>
-//#include <opencv2/core/core.hpp>
-//#include <opencv2/highgui/highgui.hpp>
-//#include <opencv2/imgproc/imgproc.hpp>
-//#include <opencv2/video/video.hpp>
-//#include <geometry_msgs/Point.h>
-//#include <std_msgs/Float32MultiArray.h>
-//#include <std_msgs/Int32MultiArray.h>
-//include <limits>
-//#include <utility>
-//#include <visualization_msgs/Marker.h>
-//#include <visualization_msgs/MarkerArray.h>
+#include <opencv2/video/tracking.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/video/video.hpp>
+#include <geometry_msgs/Point.h>
+#include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/Int32MultiArray.h>
+#include <limits>
+#include <utility>
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
 
 
 
