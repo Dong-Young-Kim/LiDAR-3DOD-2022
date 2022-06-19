@@ -18,7 +18,7 @@
   <node pkg="Lidar_3DOD_2022" type="Lidar_ROI" name="ROI_node" output="screen">
   <!--패키지 명, type => excutable file, cpp파일에 ROI_node로 되어있음-->
     <!--ROI parameter-->
-    <param name="switch_ROI" value="true"/>
+    <param name="switch_ROI" value="false"/>
     <param name="ROI_xMin" value="0"/>
     <param name="ROI_xMax" value="15"/>
     <param name="ROI_yMin" value="-3.5"/>
@@ -38,13 +38,13 @@
 	
     <!--EuclidClustering parameter-->
     <param name="switch_Euclid" value="false"/>
-    <param name="EC_eps" value="0.5"/>
+    <param name="EC_eps" value="0.13"/>
     <param name="EC_MinClusterSize" value="10"/>
     <param name="EC_MaxClusterSize" value="100000"/>
 
     <!--DBSCANclustering parameter-->
     <param name="switch_DBscan" value="true"/>
-    <param name="DBscan_eps" value="0.15"/>
+    <param name="DBscan_eps" value="0.5"/>
     <param name="DBscan_minPts" value="3"/>
     <param name="DB_MinClusterSize" value="5"/>
     <param name="DB_MaxClusterSize" value="10000"/>
