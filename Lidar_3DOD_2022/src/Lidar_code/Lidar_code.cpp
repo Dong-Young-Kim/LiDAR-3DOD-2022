@@ -8,18 +8,18 @@ void ROI(const sensor_msgs::PointCloud2ConstPtr& scan){
     PCXYZI rawData;
     PCXYZI cropedData;
     pcl::fromROSMsg(*scan,rawData);
-    //if(switch_ROI) makeCropBox(rawData, ROI_xMin, ROI_xMax, ROI_yMin, ROI_yMax, ROI_zMin, ROI_zMax);
-    if(switch_ROI){
-        for(int i=0; i < rawData.points.size(); i++){
-            if(rawData.points[i].x > ROI_xMax || rawData.points[i].x < ROI_xMin
-            || rawData.points[i].y > ROI_yMax || rawData.points[i].y < ROI_yMin
-            || rawData.points[i].z > ROI_zMax || rawData.points[i].z < ROI_zMin) continue;
-            cropedData.push_back(rawData.points[i]);
-        }
-    }
+    if(switch_ROI) makeCropBox(rawData, ROI_xMin, ROI_xMax, ROI_yMin, ROI_yMax, ROI_zMin, ROI_zMax);
+    // if(switch_ROI){
+    //     for(int i=0; i < rawData.points.size(); i++){
+    //         if(rawData.points[i].x > ROI_xMax || rawData.points[i].x < ROI_xMin
+    //         || rawData.points[i].y > ROI_yMax || rawData.points[i].y < ROI_yMin
+    //         || rawData.points[i].z > ROI_zMax || rawData.points[i].z < ROI_zMin) continue;
+    //         cropedData.push_back(rawData.points[i]);
+    //     }
+    // }
 
     sensor_msgs::PointCloud2 output;                        //to output ROIdata formed PC2
-    pub_process(cropedData,output);
+    pub_process(rawData,output);
     pub_ROI.publish(output);
     RT1.end_cal("ROI");
 }
@@ -30,6 +30,18 @@ void makeCropBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax,
     boxfilter.setMax(Eigen::Vector4f(xMax, yMax, zMax, NULL));
     boxfilter.setInputCloud(Cloud.makeShared());
     boxfilter.filter(Cloud);
+}
+
+void makeBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax){
+    pcl::PassThrough<PXYZI> filter;
+    filter.setInputCloud (Cloud.makeShared());
+    filter.setFilterFieldName ("x");
+    filter.setFilterLimits (xMin, xMax);
+    filter.setFilterFieldName ("y");
+    filter.setFilterLimits (yMin, yMax);
+    filter.setFilterFieldName ("z");
+    filter.setFilterLimits (zMin, zMax);
+    filter.filter (Cloud);
 }
 
 void UpSampling(PCXYZI& TotalCloud, PCXYZI::Ptr upsampledCloud){
@@ -226,7 +238,7 @@ void RanSaC(PCXYZI::Ptr inputCloud){
     extract.setInputCloud (lowPoints);
     extract.setIndices (inliers);
     extract.setNegative (true);     //false
-    extract.filter (*inlierPoints_neg);    
+    extract.filter (*inlierPoints_neg);
 
     //pcl::concatenateFields(*lowPoints, *highPoints, *inlierPoints_neg); //분할 한 두 포인트 병합
     *inlierPoints_neg += *highPoints;
