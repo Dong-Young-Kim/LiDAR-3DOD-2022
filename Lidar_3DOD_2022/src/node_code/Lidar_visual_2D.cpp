@@ -4,6 +4,8 @@ using namespace std;
 
 string img;
 
+#define METRETOPIXEL 29.1
+
 void show_process(const Lidar_3DOD_2022::obj_msg objs){
     RT1.start();
     
@@ -16,9 +18,13 @@ void show_process(const Lidar_3DOD_2022::obj_msg objs){
 
     //object
     for (int i = 0; i < objs.objc; i++){
-        float uCor = 236 - objs.y[i] * 29.1;
-        float vCor = 525 - objs.x[i] * 29.1;
-        cv::circle(src,cv::Point(uCor,vCor),3.5,cv::Scalar(0,255,205),-1);
+        float uCor = 236 - objs.y[i] * METRETOPIXEL;
+        float vCor = 525 - objs.x[i] * METRETOPIXEL;
+        float uSiz = (objs.yMax[i] - objs.yMin[i]) * METRETOPIXEL;
+        float vSiz = (objs.xMax[i] - objs.xMin[i]) * METRETOPIXEL;
+        
+        cv::rectangle(src, cv::Rect(uCor - uSiz/2, vCor - vSiz/2, uSiz, vSiz), cv::Scalar(0,255,205), -1, 8, 0);
+        cv::circle(src,cv::Point(uCor,vCor),3.5,cv::Scalar(0,0,255),-1);
     }
 
     cv::imshow("Lidar Detected objs", src);

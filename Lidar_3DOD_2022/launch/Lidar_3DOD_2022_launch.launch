@@ -18,7 +18,7 @@
   <node pkg="Lidar_3DOD_2022" type="Lidar_ROI" name="ROI_node" output="screen">
   <!--패키지 명, type => excutable file, cpp파일에 ROI_node로 되어있음-->
     <!--ROI parameter-->
-    <param name="switch_ROI" value="false"/>
+    <param name="switch_ROI" value="true"/>
     <param name="ROI_xMin" value="0"/>
     <param name="ROI_xMax" value="15"/>
     <param name="ROI_yMin" value="-3.5"/>
@@ -30,7 +30,7 @@
   <node pkg="Lidar_3DOD_2022" type="Lidar_ransac" name="ransac_node" output="screen">
     <!--ransac parameter-->
     <param name="switch_UpSampling" value="false"/>
-    <param name="switch_RanSaC" value="false"/>
+    <param name="switch_RanSaC" value="true"/>
     <param name="ransac_distanceThreshold" value="0.07"/>
   </node>
 
