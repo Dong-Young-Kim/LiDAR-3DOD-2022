@@ -44,6 +44,21 @@
 //#include <Lidar_process_div/DBSCAN_hanbin.h>
 #include "Lidar_3DOD_2022/obj_msg.h"  //include "패키지 명/메시지 파일 명.h"
 
+
+//---------------------------------------------------
+#include <opencv2/video/tracking.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/video/video.hpp>
+#include <geometry_msgs/Point.h>
+#include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/Int32MultiArray.h>
+#include <limits>
+#include <utility>
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
+
 using namespace std;
 
 typedef pcl::PointCloud<pcl::PointXYZ> PCXYZ;
@@ -84,6 +99,7 @@ bool switch_visual;
 //func
 void ROI(const sensor_msgs::PointCloud2ConstPtr&);
 void makeCropBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
+void makeBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
 void UpSampling(PCXYZI&, PCXYZI::Ptr);
 void DownSampling(PCXYZI&, PCXYZI::Ptr);
 void NoiseFiltering(PCXYZI::Ptr, PCXYZI::Ptr);

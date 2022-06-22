@@ -30,7 +30,7 @@
   <node pkg="Lidar_3DOD_2022" type="Lidar_ransac" name="ransac_node" output="screen">
     <!--ransac parameter-->
     <param name="switch_UpSampling" value="false"/>
-    <param name="switch_RanSaC" value="false"/>
+    <param name="switch_RanSaC" value="true"/>
     <param name="ransac_distanceThreshold" value="0.07"/>
   </node>
 
@@ -38,13 +38,13 @@
 	
     <!--EuclidClustering parameter-->
     <param name="switch_Euclid" value="false"/>
-    <param name="EC_eps" value="0.5"/>
+    <param name="EC_eps" value="0.13"/>
     <param name="EC_MinClusterSize" value="10"/>
     <param name="EC_MaxClusterSize" value="100000"/>
 
     <!--DBSCANclustering parameter-->
     <param name="switch_DBscan" value="true"/>
-    <param name="DBscan_eps" value="0.15"/>
+    <param name="DBscan_eps" value="0.5"/>
     <param name="DBscan_minPts" value="3"/>
     <param name="DB_MinClusterSize" value="5"/>
     <param name="DB_MaxClusterSize" value="10000"/>
@@ -65,6 +65,10 @@
 
   <node pkg="Lidar_3DOD_2022" type="Lidar_visual" name="visualization_node" output="screen">
     <param name="switch_visual" value="false"/>
+  </node>
+
+  <node pkg="Lidar_3DOD_2022" type="Lidar_visual_2D" name="visual_2D_node" output="screen">
+    <param name="location" value="$(find Lidar_3DOD_2022)/include/Lidar_3DOD_2022/plane.png"/>
   </node>
 
 </launch>
