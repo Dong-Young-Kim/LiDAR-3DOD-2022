@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <string>
 #include <time.h>
-#include <ctime>
 #include <ros/ros.h>
 #include <boost/format.hpp>
 #include <std_msgs/String.h>
@@ -42,9 +41,9 @@
 #include <pcl/visualization/cloud_viewer.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <Lidar_3DOD_2022/SDW_DBSCAN.h>
-//#include <Lidar_3DOD_2022/SDW_Tracking_KF.h> //&&&&&&&&&&&&&&&&
 //#include <Lidar_process_div/DBSCAN_hanbin.h>
 #include "Lidar_3DOD_2022/obj_msg.h"  //include "패키지 명/메시지 파일 명.h"
+
 
 //---------------------------------------------------
 #include <opencv2/video/tracking.hpp>
@@ -60,8 +59,6 @@
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
 
-
-
 using namespace std;
 
 typedef pcl::PointCloud<pcl::PointXYZ> PCXYZ;
@@ -76,7 +73,6 @@ ros::Publisher pub_GND;     //ground
 ros::Publisher pub_DBscan;  //DBscan
 ros::Publisher pub_msg;
 ros::Publisher pub_obj;     //user defined msg
-ros::Publisher pub_Tracking_KF; //KF
 //ros::Publisher OUT_MSG;     //out message
 
 double REMOVE_FACTOR;
@@ -111,7 +107,6 @@ void DBScanClustering(PCXYZI::Ptr, PCXYZI&);
 void EuclideanClustering(PCXYZI::Ptr, PCXYZI&);
 void RanSaC(PCXYZI::Ptr);
 void normalEstimation (PCXYZI::Ptr cloud);
-void Tracking_KF(); 
 string send_msg_DXY(PXYZI);
 string send_msg_minmax(float, float, float, float);
 string send_msg_cnt(int);
