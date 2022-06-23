@@ -12,9 +12,9 @@ void Fps::update(){
     m_fps = 1 / interval;
     m_count++;
         
-    cout << "Interval: " << interval << " sec";
-    cout << "\tFPS: " << m_fps << " frame/sec";
-    cout << "\tLoop " << m_count << endl;
+    printf("Interval : %.3fsec", interval);
+    printf("\tFPS: %.1fframe/sec", m_fps);
+    printf("\tLoop %d\n", m_count);
 }
 
 RT::RT(){}
