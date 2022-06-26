@@ -4,12 +4,10 @@ using namespace std;
 
 string img;
 
-#define METRETOPIXEL 29.1
+#define METRETOPIXEL 29.1 //convert to real object size(m) to pixel size
 
 void show_process(const Lidar_3DOD_2022::obj_msg objs){
     RT1.start();
-    
-    //cout << objs.objc << endl;
 
     cv::Mat src = cv::imread(img, cv::IMREAD_COLOR);
 
@@ -23,8 +21,8 @@ void show_process(const Lidar_3DOD_2022::obj_msg objs){
         float uSiz = (objs.yMax[i] - objs.yMin[i]) * METRETOPIXEL;
         float vSiz = (objs.xMax[i] - objs.xMin[i]) * METRETOPIXEL;
         
-        cv::rectangle(src, cv::Rect(uCor - uSiz/2, vCor - vSiz/2, uSiz, vSiz), cv::Scalar(0,255,205), -1, 8, 0);
-        cv::circle(src,cv::Point(uCor,vCor),3.5,cv::Scalar(0,0,255),-1);
+        cv::rectangle(src, cv::Rect(uCor - uSiz/2, vCor - vSiz/2, uSiz, vSiz), cv::Scalar(0,255,205), -1, 8, 0); //obj size
+        cv::circle(src,cv::Point(uCor,vCor),3.5,cv::Scalar(0,0,255),-1); //center point
     }
 
     cv::imshow("Lidar Detected objs", src);
