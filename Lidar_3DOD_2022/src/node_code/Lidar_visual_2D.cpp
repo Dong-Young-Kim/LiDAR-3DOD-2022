@@ -34,8 +34,8 @@ void show_process(const Lidar_3DOD_2022::obj_msg objs){
 }
 
 int main(int argc, char** argv){
-	ros::init(argc, argv, "Visual_2D"); //node name 
-	ros::NodeHandle nh;         //nodehandle
+	ros::init(argc, argv, "Visual_2D");         //node name 
+	ros::NodeHandle nh;                         //nodehandle
 
     nh.getParam("/visual_2D_node/location", img);
 
