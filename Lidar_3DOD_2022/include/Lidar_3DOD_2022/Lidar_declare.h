@@ -100,6 +100,7 @@ bool switch_visual;
 void ROI(const sensor_msgs::PointCloud2ConstPtr&);
 void makeCropBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
 void makeBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
+void makeEStopSignal (const PCXYZI&);
 void UpSampling(PCXYZI&, PCXYZI::Ptr);
 void DownSampling(PCXYZI&, PCXYZI::Ptr);
 void NoiseFiltering(PCXYZI::Ptr, PCXYZI::Ptr);

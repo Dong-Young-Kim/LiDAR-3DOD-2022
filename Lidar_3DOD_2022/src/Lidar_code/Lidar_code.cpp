@@ -44,6 +44,17 @@ void makeBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax, flo
     filter.filter (Cloud);
 }
 
+void makeEStopSignal (const PCXYZI& cloud){        
+    for(int i=0; i < cloud.points.size(); i++){
+        if(cloud.points[i].x > 0.2f && cloud.points[i].x < 0.7f
+        && cloud.points[i].y > -0.25f && cloud.points[i].y < 0.25f
+        && cloud.points[i].z > -0.7f && cloud.points[i].z < 0.7f) {
+            //시그널 만드는 코드 추가
+            break;
+        }
+    }    
+}
+
 void UpSampling(PCXYZI& TotalCloud, PCXYZI::Ptr upsampledCloud){
     PCXYZI Data_for_voxel;
     pcl::MovingLeastSquares<PXYZI, PXYZI> filter;
