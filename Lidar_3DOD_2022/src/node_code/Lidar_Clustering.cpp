@@ -24,12 +24,12 @@ void Clustering_process(const sensor_msgs::PointCloud2ConstPtr& aft_ransac){
     } 
     RT1.end_cal("clustering");
     FPS1.update();
-    cout << "-------------------------------------------------" << endl;
+    //cout << "-------------------------------------------------" << endl;
 }
 
 int main(int argc, char** argv){
-	ros::init(argc, argv, "Clustering"); //node name 
-	ros::NodeHandle nh;         //nodehandle
+	ros::init(argc, argv, "Clustering");    //node name 
+	ros::NodeHandle nh;                     //nodehandle
 
     
 
