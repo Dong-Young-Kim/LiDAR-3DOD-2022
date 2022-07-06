@@ -95,6 +95,7 @@ bool switch_UpSampling;
 bool switch_RanSaC;
 bool switch_DBscan;
 bool switch_visual;
+bool switch_visual_2D;
 
 //func
 void ROI(const sensor_msgs::PointCloud2ConstPtr&);
