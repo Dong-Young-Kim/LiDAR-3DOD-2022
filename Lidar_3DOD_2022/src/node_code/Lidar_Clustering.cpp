@@ -14,14 +14,7 @@ void Clustering_process(const sensor_msgs::PointCloud2ConstPtr& aft_ransac){
     else filteredCloud = upsampledCloud;
     //-----------clustering------------
     PCXYZI Fin_Cloud;
-    if( switch_DBscan ) DBScanClustering( filteredCloud, Fin_Cloud); //prior DBSCAN
-    else if( switch_Euclid ) EuclideanClustering( filteredCloud, Fin_Cloud );
-    else{
-        Fin_Cloud = *filteredCloud;
-        sensor_msgs::PointCloud2 output; 
-        pub_process(Fin_Cloud,output);
-        pub_DBscan.publish(output);        
-    } 
+    Clustering(filteredCloud, Fin_Cloud, switch_DBscan, switch_Euclid);
     RT1.end_cal("clustering");
     FPS1.update();
     //cout << "-------------------------------------------------" << endl;
@@ -29,9 +22,7 @@ void Clustering_process(const sensor_msgs::PointCloud2ConstPtr& aft_ransac){
 
 int main(int argc, char** argv){
 	ros::init(argc, argv, "Clustering");    //node name 
-	ros::NodeHandle nh;                     //nodehandle
-
-    
+	ros::NodeHandle nh;                     //nodehandle    
 
     nh.getParam("/Clustering_node/switch_NoiseFiltering", switch_NoiseFiltering);
     //Euclid
@@ -53,11 +44,13 @@ int main(int argc, char** argv){
 
 	//ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/velodyne_points_resampling", 100, Clustering_process);
 	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/2_1_velodyne_points_ransac", 100, Clustering_process);
-    if( switch_Euclid && !switch_DBscan ) pub_Euclid = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100);
-    else if( switch_DBscan ) pub_DBscan = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100);
+    //if( switch_Euclid && !switch_DBscan ) pub_Euclid = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100);
+    //else if( switch_DBscan ) pub_DBscan = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100);
+    pub_Clu = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100);
     pub_msg = nh.advertise<std_msgs::String> ("/Lidar_msg",100); 
 
     pub_obj = nh.advertise<Lidar_3DOD_2022::obj_msg> ("/Lidar_obj", 100);
+    pub_object = nh.advertise<Lidar_3DOD_2022::object_msg_arr> ("/Lidar_object", 100);
     //<패키지 명/메시지 파일 명>
 
     ros::spin();

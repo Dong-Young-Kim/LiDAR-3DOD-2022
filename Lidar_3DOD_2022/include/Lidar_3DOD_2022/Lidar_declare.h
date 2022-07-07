@@ -43,6 +43,7 @@
 #include <Lidar_3DOD_2022/SDW_DBSCAN.h>
 //#include <Lidar_process_div/DBSCAN_hanbin.h>
 #include "Lidar_3DOD_2022/obj_msg.h"  //include "패키지 명/메시지 파일 명.h"
+#include "Lidar_3DOD_2022/object_msg_arr.h"  //include "패키지 명/메시지 파일 명.h"
 
 
 //---------------------------------------------------
@@ -67,12 +68,12 @@ typedef pcl::PointXYZ PXYZ;
 typedef pcl::PointXYZI PXYZI;
 
 ros::Publisher pub_ROI;     //ROI
-ros::Publisher pub_Euclid;    //clustering1
 ros::Publisher pub_RS;      //ransac
 ros::Publisher pub_GND;     //ground
-ros::Publisher pub_DBscan;  //DBscan
+ros::Publisher pub_Clu;
 ros::Publisher pub_msg;
 ros::Publisher pub_obj;     //user defined msg
+ros::Publisher pub_object;     //user defined msg
 //ros::Publisher OUT_MSG;     //out message
 
 double REMOVE_FACTOR;
@@ -105,6 +106,7 @@ void makeEStopSignal (const PCXYZI&);
 void UpSampling(PCXYZI&, PCXYZI::Ptr);
 void DownSampling(PCXYZI&, PCXYZI::Ptr);
 void NoiseFiltering(PCXYZI::Ptr, PCXYZI::Ptr);
+void Clustering (PCXYZI::Ptr, PCXYZI&, bool, bool);
 void DBScanClustering(PCXYZI::Ptr, PCXYZI&);
 void EuclideanClustering(PCXYZI::Ptr, PCXYZI&);
 void RanSaC(PCXYZI::Ptr);

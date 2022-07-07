@@ -107,6 +107,16 @@ void NoiseFiltering(PCXYZI::Ptr inputCloud, PCXYZI::Ptr outputCloud){
     //else if(flag == "post") pub_NF2.publish(output);
 }
 
+void Clustering (PCXYZI::Ptr inputCloud, PCXYZI& retCloud, bool switch_DBscan, bool switch_Euclid){
+    if( switch_DBscan ) DBScanClustering( inputCloud, retCloud); //prior DBSCAN
+    else if( switch_Euclid ) EuclideanClustering( inputCloud, retCloud );
+    else{
+        sensor_msgs::PointCloud2 output; 
+        pub_process(*inputCloud, output);
+        pub_Clu.publish(output);        
+    } 
+}
+
 void EuclideanClustering(PCXYZI::Ptr inputCloud, PCXYZI& retCloud){
     pcl::search::KdTree<PXYZI>::Ptr tree (new pcl::search::KdTree<PXYZI>);  // Creating the KdTree for searching PC
     tree->setInputCloud(inputCloud);                     // setting the KdTree
@@ -145,7 +155,7 @@ void EuclideanClustering(PCXYZI::Ptr inputCloud, PCXYZI& retCloud){
     }
     sensor_msgs::PointCloud2 output; 
     pub_process(retCloud,output); 
-    pub_Euclid.publish(output); 
+    pub_Clu.publish(output); 
 }
 
 void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
@@ -205,7 +215,7 @@ void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
     FT.jiwon_filter(sorted_OBJ, switch_jiwon_filter);
     //print_OBJ(sorted_OBJ);
     msg_process(sorted_OBJ);
-    pub_DBscan.publish(output);
+    pub_Clu.publish(output);
 
     {//메시지 발행으로 임시로 넣어놓은 코드
     Lidar_3DOD_2022::obj_msg msg;
@@ -216,6 +226,7 @@ void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
 
     pub_obj.publish(msg);
     }
+    //object_msg_process
 
 }
 
