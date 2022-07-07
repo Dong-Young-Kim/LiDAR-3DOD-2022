@@ -29,6 +29,7 @@ int main(int argc, char** argv){
     viewer->initCameraParameters();
     viewer->setCameraPosition(-5.0, 5.0, 2.0,    6.0, -3.0, 0.0,   0.0, 0.0, 1.0);
     viewer->addCoordinateSystem (0.3f);    
+    viewer->setShowFPS(15);
 
 	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 1, visual_process);   
     

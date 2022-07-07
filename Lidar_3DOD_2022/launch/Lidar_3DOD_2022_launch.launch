@@ -65,7 +65,7 @@
   </node>
 
   <node pkg="Lidar_3DOD_2022" type="Lidar_visual" name="visualization_node" output="screen">
-    <param name="switch_visual" value="true"/>
+    <param name="switch_visual" value="false"/>
   </node>
 
   <node pkg="Lidar_3DOD_2022" type="Lidar_visual_2D" name="visual_2D_node" output="screen">
