@@ -107,6 +107,7 @@ void UpSampling(PCXYZI&, PCXYZI::Ptr);
 void DownSampling(PCXYZI&, PCXYZI::Ptr);
 void NoiseFiltering(PCXYZI::Ptr, PCXYZI::Ptr);
 void Clustering (PCXYZI::Ptr, PCXYZI&, bool, bool);
+void afterClusteringProcess(PCXYZI::Ptr, PCXYZI&, vector<pcl::PointIndices>&);
 void DBScanClustering(PCXYZI::Ptr, PCXYZI&);
 void EuclideanClustering(PCXYZI::Ptr, PCXYZI&);
 void RanSaC(PCXYZI::Ptr);

@@ -33,10 +33,11 @@ int main(int argc, char** argv){
 	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100, visual_process);   
     
 	//ros::spin();
-    
+    ros::Rate rate(15);
     while(!viewer->wasStopped()) {
-        ros::spinOnce();    
+        ros::spinOnce();
         viewer->spinOnce();
+        rate.sleep();
     }
 
     delete viewer;

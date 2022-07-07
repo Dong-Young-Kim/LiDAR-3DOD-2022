@@ -110,11 +110,103 @@ void NoiseFiltering(PCXYZI::Ptr inputCloud, PCXYZI::Ptr outputCloud){
 void Clustering (PCXYZI::Ptr inputCloud, PCXYZI& retCloud, bool switch_DBscan, bool switch_Euclid){
     if( switch_DBscan ) DBScanClustering( inputCloud, retCloud); //prior DBSCAN
     else if( switch_Euclid ) EuclideanClustering( inputCloud, retCloud );
-    else{
-        sensor_msgs::PointCloud2 output; 
-        pub_process(*inputCloud, output);
-        pub_Clu.publish(output);        
-    } 
+    else retCloud = *inputCloud; //doesn't process clustering
+
+    sensor_msgs::PointCloud2 output; 
+    pub_process(retCloud,output); 
+    pub_Clu.publish(output); 
+}
+
+void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl::PointIndices>& cluster_indices){
+    int cluSz = cluster_indices.size();
+    vector<float> obj_x(cluSz); vector<float> obj_y(cluSz); vector<float> obj_z(cluSz);
+    vector<float> obj_xMin(cluSz); vector<float> obj_yMin(cluSz); vector<float> obj_zMin(cluSz);
+    vector<float> obj_xMax(cluSz); vector<float> obj_yMax(cluSz); vector<float> obj_zMax(cluSz);
+
+    vector<pair<PXYZI,string>> sorted_OBJ; //여기에 minmax가 포함되지 않아서 발생한 문제이므로 이를 포함하는 struct를 만들자
+    struct objInfo {
+        float x;
+        float y;
+        float z;
+        float xMin;
+        float yMin;
+        float zMin;
+        float xMax;
+        float yMax;
+        float zMax;
+    };
+    vector<struct objInfo> objs;
+
+    int j = 0;
+    for (vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it, j++){
+        pair<float,float> x(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest()); //first = min, second = max
+        pair<float,float> y(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest()); 
+        pair<float,float> z(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest()); 
+    	for (std::vector<int>::const_iterator pit = it->indices.begin(); pit != it->indices.end(); ++pit){
+            PXYZI pt = inputCloud->points[*pit];
+            pt.intensity = j % 10;
+            retCloud.push_back(pt);
+            if(pt.x < x.first)      x.first = pt.x;
+            if(pt.x > x.second)     x.second = pt.x;
+            if(pt.y < y.first)      y.first = pt.y ;
+            if(pt.y > y.second)     y.second = pt.y; 
+            if(pt.z < z.first)      z.first = pt.z;
+            if(pt.z > z.second)     z.second = pt.z;  
+    	}
+        PXYZI* tmp = new PXYZI();
+        tmp->x = MidPt(x.first,x.second); tmp->y = MidPt(y.first,y.second); tmp->z = z.first; //z = min
+        pair<PXYZI,string> temp = make_pair(*tmp,send_msg_minmax(x.first, x.second, y.first, y.second));
+        sorted_OBJ.push_back(temp);
+
+        objInfo tmp_obj = {MidPt(x.first,x.second), MidPt(y.first,y.second), MidPt(z.first,z.second),
+                            x.first, y.first, z.first, x.second, y.second, z.second};
+        objs.push_back(tmp_obj);
+
+        obj_x[j] = tmp->x; obj_y[j] = tmp->y; obj_z[j] = MidPt(z.first,z.second);
+        obj_xMin[j] = x.first; obj_yMin[j] = y.first; obj_zMin[j] = z.first;
+        obj_xMax[j] = x.second; obj_yMax[j] = y.second; obj_zMax[j] = z.second;
+    }
+
+    cout << "sorted obj size" << sorted_OBJ.size() << endl;
+    //cout << "------------------ DF & JF ------------------" << endl;
+    FT.DY_filter(sorted_OBJ, switch_DY_filter);
+    FT.jiwon_filter(sorted_OBJ, switch_jiwon_filter);
+    //print_OBJ(sorted_OBJ);
+    msg_process(sorted_OBJ);
+    cout << "sorted obj size" << sorted_OBJ.size() << endl;
+
+
+    {//메시지 발행으로 임시로 넣어놓은 코드
+        Lidar_3DOD_2022::obj_msg msg;
+        msg.objc = cluSz;
+        msg.x = obj_x; msg.y = obj_y; msg.z = obj_z;
+        msg.xMin = obj_xMin; msg.yMin = obj_yMin; msg.zMin = obj_zMin;
+        msg.xMax = obj_xMax; msg.yMax = obj_yMax; msg.zMax = obj_zMax;
+
+        pub_obj.publish(msg);
+    }
+    //object_msg_process
+    {
+        Lidar_3DOD_2022::object_msg_arr msg;
+        Lidar_3DOD_2022::object_msg msgComponent;
+
+        vector<Lidar_3DOD_2022::object_msg> msgConvertVector;
+        msg.objc = objs.size();
+        for (objInfo obj : objs){
+            msgComponent.x = obj.x;
+            msgComponent.y = obj.y;
+            msgComponent.z = obj.z;
+            msgComponent.xMin = obj.xMin;
+            msgComponent.yMin = obj.yMin;
+            msgComponent.zMin = obj.zMin;
+            msgComponent.xMax = obj.xMax;
+            msgComponent.yMax = obj.yMax;
+            msgComponent.zMax = obj.zMax;
+            msgConvertVector.push_back(msgComponent);
+        }
+        msg.object_msg_arr = msgConvertVector;
+        pub_object.publish(msg);
+    }
 }
 
 void EuclideanClustering(PCXYZI::Ptr inputCloud, PCXYZI& retCloud){
@@ -130,38 +222,13 @@ void EuclideanClustering(PCXYZI::Ptr inputCloud, PCXYZI& retCloud){
     ec.setSearchMethod(tree);				             // searching method : tree 
     ec.extract(cluster_indices);                         // save clusteringObj to cluster_indices
 
-    vector<pair<PXYZI,string>> sorted_OBJ; 
-    //temp print middle point 
-    int j = 0;
-    for (vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it, j++){
-        pair<float,float> x(9999,-9999); //first = min, second = max
-        pair<float,float> y(9999,-9999); 
-        pair<float,float> z(9999,-9999); 
-    	for (std::vector<int>::const_iterator pit = it->indices.begin(); pit != it->indices.end(); ++pit){
-            PXYZI pt = inputCloud->points[*pit];
-            pt.intensity = j % 10;
-            retCloud.push_back(pt);
-            if(pt.x < x.first)      x.first = pt.x;
-            if(pt.x > x.second)     x.second = pt.x;
-            if(pt.y < y.first)      y.first = pt.y ;
-            if(pt.y > y.second)     y.second = pt.y; 
-            if(pt.z < z.first)      z.first = pt.z;
-            if(pt.z > z.second)     z.second = pt.z;
-    	}
-            PXYZI* tmp = new PXYZI(); //i dont know intensity initial format
-            tmp->x = MidPt(x.first,x.second); tmp->y = MidPt(y.first,y.second); tmp->z = MidPt(z.first,z.second);
-            pair<PXYZI,string> temp = make_pair(*tmp,send_msg_minmax(x.first, x.second, y.first, y.second));
-            sorted_OBJ.push_back(temp);
-    }
-    sensor_msgs::PointCloud2 output; 
-    pub_process(retCloud,output); 
-    pub_Clu.publish(output); 
+    //cout << "Number of clusters is equal to " << cluster_indices.size() << endl;    //return num of clusteringObj
+    afterClusteringProcess(inputCloud, retCloud, cluster_indices);
 }
 
-void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
+void DBScanClustering(PCXYZI::Ptr inputCloud, PCXYZI& retCloud){
     pcl::search::KdTree<PXYZI>::Ptr tree (new pcl::search::KdTree<PXYZI>);  // Creating the KdTree for searching PC
-    tree->setInputCloud(input_cloud);                     // setting the KdTree
-    PCXYZI::Ptr new_point(new PCXYZI);
+    tree->setInputCloud(inputCloud);                     // setting the KdTree
     vector<pcl::PointIndices> cluster_indices;           // saving place for clustering obj
     
     DBSCAN<PXYZI> DB;
@@ -170,64 +237,11 @@ void DBScanClustering(PCXYZI::Ptr input_cloud, PCXYZI& retCloud){
     DB.setMinClusterSize(DB_MinClusterSize);		     // minSize the number of point for clustering
     DB.setMaxClusterSize(DB_MaxClusterSize);	         // maxSize the number of point for clustering
     DB.setSearchMethod(tree);				             // searching method : tree
-    DB.setInputCloud(input_cloud);   	                 // setting ec with inputCloud
+    DB.setInputCloud(inputCloud);   	                 // setting ec with inputCloud
     DB.extract(cluster_indices);                         // save clusteringObj to cluster_indices
 
     //cout << "Number of clusters is equal to " << cluster_indices.size() << endl;    //return num of clusteringObj
-
-    int cluSz = cluster_indices.size();
-    vector<float> obj_x(cluSz); vector<float> obj_y(cluSz); vector<float> obj_z(cluSz);
-    vector<float> obj_xMin(cluSz); vector<float> obj_yMin(cluSz); vector<float> obj_zMin(cluSz);
-    vector<float> obj_xMax(cluSz); vector<float> obj_yMax(cluSz); vector<float> obj_zMax(cluSz);
-
-    vector<pair<PXYZI,string>> sorted_OBJ; 
-    //temp print middle point 
-    int j = 0;
-    for (vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it, j++){
-        pair<float,float> x(std::numeric_limits<float>::max(),-std::numeric_limits<float>::max()); //first = min, second = max
-        pair<float,float> y(std::numeric_limits<float>::max(),-std::numeric_limits<float>::max()); 
-        pair<float,float> z(std::numeric_limits<float>::max(),-std::numeric_limits<float>::max()); 
-    	for (std::vector<int>::const_iterator pit = it->indices.begin(); pit != it->indices.end(); ++pit){
-            PXYZI pt = input_cloud->points[*pit];
-            pt.intensity = j % 10;
-            retCloud.push_back(pt);
-            if(pt.x < x.first)      x.first = pt.x;
-            if(pt.x > x.second)     x.second = pt.x;
-            if(pt.y < y.first)      y.first = pt.y ;
-            if(pt.y > y.second)     y.second = pt.y; 
-            if(pt.z < z.first)      z.first = pt.z;
-            if(pt.z > z.second)     z.second = pt.z;  
-    	}
-        PXYZI* tmp = new PXYZI();
-        tmp->x = MidPt(x.first,x.second); tmp->y = MidPt(y.first,y.second); tmp->z = z.first; //z = min
-
-        obj_x[j] = tmp->x; obj_y[j] = tmp->y; obj_z[j] = MidPt(z.first,z.second);
-        obj_xMin[j] = x.first; obj_yMin[j] = y.first; obj_zMin[j] = z.first;
-        obj_xMax[j] = x.second; obj_yMax[j] = y.second; obj_zMax[j] = z.second;
-
-        pair<PXYZI,string> temp = make_pair(*tmp,send_msg_minmax(x.first, x.second, y.first, y.second));
-        sorted_OBJ.push_back(temp);
-    }
-    sensor_msgs::PointCloud2 output; 
-    pub_process(retCloud,output);
-    //cout << "------------------ DF & JF ------------------" << endl;
-    FT.DY_filter(sorted_OBJ, switch_DY_filter);
-    FT.jiwon_filter(sorted_OBJ, switch_jiwon_filter);
-    //print_OBJ(sorted_OBJ);
-    msg_process(sorted_OBJ);
-    pub_Clu.publish(output);
-
-    {//메시지 발행으로 임시로 넣어놓은 코드
-    Lidar_3DOD_2022::obj_msg msg;
-    msg.objc = cluSz;
-    msg.x = obj_x; msg.y = obj_y; msg.z = obj_z;
-    msg.xMin = obj_xMin; msg.yMin = obj_yMin; msg.zMin = obj_zMin;
-    msg.xMax = obj_xMax; msg.yMax = obj_yMax; msg.zMax = obj_zMax;
-
-    pub_obj.publish(msg);
-    }
-    //object_msg_process
-
+    afterClusteringProcess(inputCloud, retCloud, cluster_indices);
 }
 
 void RanSaC(PCXYZI::Ptr inputCloud){
