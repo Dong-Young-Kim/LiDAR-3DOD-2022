@@ -14,6 +14,8 @@ find_package( OpenCV REQUIRED )
 add_message_files(
   FILES
   obj_msg.msg
+  object_msg.msg
+  object_msg_arr.msg
 )
 
 generate_messages(
