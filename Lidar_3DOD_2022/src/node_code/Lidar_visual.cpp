@@ -30,7 +30,7 @@ int main(int argc, char** argv){
     viewer->setCameraPosition(-5.0, 5.0, 2.0,    6.0, -3.0, 0.0,   0.0, 0.0, 1.0);
     viewer->addCoordinateSystem (0.3f);    
 
-	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100, visual_process);   
+	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 1, visual_process);   
     
 	//ros::spin();
     ros::Rate rate(15);

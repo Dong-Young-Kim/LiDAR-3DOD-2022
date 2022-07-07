@@ -30,9 +30,9 @@ int main(int argc, char** argv){
     nh.getParam("/ransac_node/switch_RanSaC", switch_RanSaC);
     nh.getParam("/ransac_node/ransac_distanceThreshold", ransac_distanceThreshold);
 
-	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/1_velodyne_points_ROI", 100, ransac_process);
-    pub_RS = nh.advertise<sensor_msgs::PointCloud2> ("/2_1_velodyne_points_ransac", 100);
-    pub_GND = nh.advertise<sensor_msgs::PointCloud2> ("/2_2_velodyne_points_ground", 100);
+	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/1_velodyne_points_ROI", 1, ransac_process);
+    pub_RS = nh.advertise<sensor_msgs::PointCloud2> ("/2_1_velodyne_points_ransac", 1);
+    pub_GND = nh.advertise<sensor_msgs::PointCloud2> ("/2_2_velodyne_points_ground", 1);
     
 	ros::spin();
 }

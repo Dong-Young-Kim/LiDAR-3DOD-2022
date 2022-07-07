@@ -13,8 +13,8 @@ int main(int argc, char** argv){
     nh.getParam("/ROI_node/ROI_yMax", ROI_yMax);
     nh.getParam("/ROI_node/ROI_zMin", ROI_zMin);
     nh.getParam("/ROI_node/ROI_zMax", ROI_zMax);
-	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/velodyne_points", 100, ROI);
-    pub_ROI = nh.advertise<sensor_msgs::PointCloud2> ("/1_velodyne_points_ROI", 100);
+	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/velodyne_points", 1, ROI);
+    pub_ROI = nh.advertise<sensor_msgs::PointCloud2> ("/1_velodyne_points_ROI", 1);
     
 	ros::spin();
 }

@@ -41,7 +41,7 @@ int main(int argc, char** argv){
     nh.getParam("/visual_2D_node/location", img);
     if (!switch_visual_2D) exit(0); //exit node if switch is 0
 
-	ros::Subscriber sub = nh.subscribe<Lidar_3DOD_2022::obj_msg> ("/Lidar_obj", 100, show_process);
+	ros::Subscriber sub = nh.subscribe<Lidar_3DOD_2022::obj_msg> ("/Lidar_obj", 1, show_process);
 
     ros::spin();
 }

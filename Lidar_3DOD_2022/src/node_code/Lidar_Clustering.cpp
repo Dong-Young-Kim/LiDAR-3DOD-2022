@@ -42,15 +42,13 @@ int main(int argc, char** argv){
     nh.getParam("/Clustering_node/Ransac_Z_ROI", Ransac_Z_ROI);  //DY_filter param
     nh.getParam("/Clustering_node/REMOVE_FACTOR", REMOVE_FACTOR);
 
-	//ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/velodyne_points_resampling", 100, Clustering_process);
+	//ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/velodyne_points_resampling", 1, Clustering_process);
 	ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("/2_1_velodyne_points_ransac", 1, Clustering_process);
-    //if( switch_Euclid && !switch_DBscan ) pub_Euclid = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100);
-    //else if( switch_DBscan ) pub_DBscan = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100);
-    pub_Clu = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 100);
-    pub_msg = nh.advertise<std_msgs::String> ("/Lidar_msg",100); 
+    pub_Clu = nh.advertise<sensor_msgs::PointCloud2> ("/3_velodyne_points_Clustering", 1);
+    pub_msg = nh.advertise<std_msgs::String> ("/Lidar_msg", 1); 
 
-    pub_obj = nh.advertise<Lidar_3DOD_2022::obj_msg> ("/Lidar_obj", 100);
-    pub_object = nh.advertise<Lidar_3DOD_2022::object_msg_arr> ("/Lidar_object", 100);
+    pub_obj = nh.advertise<Lidar_3DOD_2022::obj_msg> ("/Lidar_obj", 1);
+    pub_object = nh.advertise<Lidar_3DOD_2022::object_msg_arr> ("/Lidar_object", 1);
     //<패키지 명/메시지 파일 명>
 
     ros::spin();
