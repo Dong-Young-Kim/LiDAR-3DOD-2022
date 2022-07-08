@@ -134,6 +134,8 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
         float xMax;
         float yMax;
         float zMax;
+        string classes;
+        unsigned int idx;
     };
     vector<struct objInfo> objs;
 
@@ -188,21 +190,23 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
     //object_msg_process
     {
         Lidar_3DOD_2022::object_msg_arr msg;
-        Lidar_3DOD_2022::object_msg msgComponent;
+        Lidar_3DOD_2022::object_msg msgCpnt;
 
         vector<Lidar_3DOD_2022::object_msg> msgConvertVector;
         msg.objc = objs.size();
         for (objInfo obj : objs){
-            msgComponent.x = obj.x;
-            msgComponent.y = obj.y;
-            msgComponent.z = obj.z;
-            msgComponent.xMin = obj.xMin;
-            msgComponent.yMin = obj.yMin;
-            msgComponent.zMin = obj.zMin;
-            msgComponent.xMax = obj.xMax;
-            msgComponent.yMax = obj.yMax;
-            msgComponent.zMax = obj.zMax;
-            msgConvertVector.push_back(msgComponent);
+            msgCpnt.x = obj.x;
+            msgCpnt.y = obj.y;
+            msgCpnt.z = obj.z;
+            msgCpnt.xMin = obj.xMin;
+            msgCpnt.yMin = obj.yMin;
+            msgCpnt.zMin = obj.zMin;
+            msgCpnt.xMax = obj.xMax;
+            msgCpnt.yMax = obj.yMax;
+            msgCpnt.zMax = obj.zMax;
+            msgCpnt.classes = "unkwown";
+            msgCpnt.idx = 0;
+            msgConvertVector.push_back(msgCpnt);
         }
         msg.object_msg_arr = msgConvertVector;
         pub_object.publish(msg);

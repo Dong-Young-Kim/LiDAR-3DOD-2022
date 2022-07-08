@@ -116,6 +116,7 @@ string send_msg_DXY(PXYZI);
 string send_msg_minmax(float, float, float, float);
 string send_msg_cnt(int);
 void msg_process(vector<pair<PXYZI,string>>&);
+void object_msg_process();
 
 class Filter{
 public:
