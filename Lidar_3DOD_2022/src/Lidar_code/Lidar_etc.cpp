@@ -14,7 +14,7 @@ void Fps::update(){
         
     printf("Interval : %.3fsec", interval);
     printf("\tFPS: %.1fframe/sec", m_fps);
-    printf("\tLoop %d\n", m_count);
+    printf("\tLoop %zu\n", m_count);
 }
 
 RT::RT(){}
