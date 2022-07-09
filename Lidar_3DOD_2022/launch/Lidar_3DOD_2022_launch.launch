@@ -24,7 +24,7 @@
     <param name="ROI_xMax" value="15"/>
     <param name="ROI_yMin" value="-3.5"/>
     <param name="ROI_yMax" value="3.5"/>
-    <param name="ROI_zMin" value="-0.5"/>
+    <param name="ROI_zMin" value="-1.5"/>
     <param name="ROI_zMax" value="1.2"/>
   </node>
 
@@ -61,7 +61,7 @@
     <param name="REMOVE_FACTOR" value="0.2"/>
 
     <!--DYFilter parameter-->
-    <param name="Ransac_Z_ROI" value="-0.7"/>
+    <param name="Ransac_Z_ROI" value="-0.85"/>
   </node>
 
   <node pkg="Lidar_3DOD_2022" type="Lidar_visual" name="visualization_node" output="screen">

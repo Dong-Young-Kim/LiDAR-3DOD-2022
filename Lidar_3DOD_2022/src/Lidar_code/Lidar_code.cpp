@@ -235,14 +235,14 @@ void DBScanClustering(PCXYZI::Ptr inputCloud, PCXYZI& retCloud){
     tree->setInputCloud(inputCloud);                     // setting the KdTree
     vector<pcl::PointIndices> cluster_indices;           // saving place for clustering obj
     
-    DBSCAN<PXYZI> DB;
-    DB.setCorePointMinPts(DBscan_minPts);                // minimum points of cluster judge
-    DB.setClusterTolerance(DBscan_eps);                  // dist between points
-    DB.setMinClusterSize(DB_MinClusterSize);		     // minSize the number of point for clustering
-    DB.setMaxClusterSize(DB_MaxClusterSize);	         // maxSize the number of point for clustering
-    DB.setSearchMethod(tree);				             // searching method : tree
-    DB.setInputCloud(inputCloud);   	                 // setting ec with inputCloud
-    DB.extract(cluster_indices);                         // save clusteringObj to cluster_indices
+    DBSCAN<PXYZI> db;
+    db.setCorePointMinPts(DBscan_minPts);                // minimum points of cluster judge
+    db.setClusterTolerance(DBscan_eps);                  // dist between points
+    db.setMinClusterSize(DB_MinClusterSize);		     // minSize the number of point for clustering
+    db.setMaxClusterSize(DB_MaxClusterSize);	         // maxSize the number of point for clustering
+    db.setSearchMethod(tree);				             // searching method : tree
+    db.setInputCloud(inputCloud);   	                 // setting ec with inputCloud
+    db.extract(cluster_indices);                         // save clusteringObj to cluster_indices
 
     //cout << "Number of clusters is equal to " << cluster_indices.size() << endl;    //return num of clusteringObj
     afterClusteringProcess(inputCloud, retCloud, cluster_indices);
@@ -261,9 +261,9 @@ void RanSaC(PCXYZI::Ptr inputCloud){
     pcl::PassThrough<PXYZI> filter;
     filter.setInputCloud (inputCloud);
     filter.setFilterFieldName ("z");
-    filter.setFilterLimits (-10, 0);
+    filter.setFilterLimits (-10, -0.2);
     filter.filter (*lowPoints);
-    filter.setFilterLimits (0, 10);
+    filter.setFilterLimits (-0.2, 10);
     filter.filter (*highPoints);
 
     seg.setOptimizeCoefficients (true);

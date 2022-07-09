@@ -15,7 +15,7 @@ void Filter::DY_filter(vector<pair<PXYZI,string>>& sorted_OBJ, bool flag){
 void Filter::jiwon_filter(vector<pair<PXYZI,string>>& sorted_OBJ, bool flag) {
     if(!flag) return;
     vector<pair<PXYZI,string>>::iterator it = sorted_OBJ.begin();
-        for (int i = 0; i < sorted_OBJ.size(); i++) {
+    for (int i = 0; i < sorted_OBJ.size(); i++) {
         it = sorted_OBJ.begin();
         for (int k = 0; k < i + 1; k++) {
             it++;
