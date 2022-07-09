@@ -55,7 +55,7 @@ public:
     void calc_eps(){
         double safe_coeff = 0.05; //오차를 고려한 안전계수
         double cur_dist = sqrt(input_cloud->points[self_idx].x * input_cloud->points[self_idx].x + input_cloud->points[self_idx].y * input_cloud->points[self_idx].y + input_cloud->points[self_idx].z * input_cloud->points[self_idx].z);
-        this -> eps = 0.037 * cur_dist; //실험적으로 구한 dist에 따른 eps함수
+        this -> eps = 0.057 * cur_dist; //실험적으로 구한 dist에 따른 eps함수
         if(cur_dist > 5){
             this -> eps += safe_coeff; //가까이에선 거의 오차가 없음. 오히려 기존 eps보다 안전계수가 커져버려서 과부하 발생
         }

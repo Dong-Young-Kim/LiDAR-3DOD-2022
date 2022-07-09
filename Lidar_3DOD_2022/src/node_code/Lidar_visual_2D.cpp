@@ -6,7 +6,7 @@ string img;
 
 #define METRETOPIXEL 29.1 //convert to real object size(m) to pixel size
 
-void flat_visual_process(const Lidar_3DOD_2022::object_msg_arr objs){
+void flat_visual_process(const Lidar_3DOD_2022::object_msg_arrConstPtr& objs){
     RT1.start();
 
     cv::Mat src = cv::imread(img, cv::IMREAD_COLOR);
@@ -14,19 +14,8 @@ void flat_visual_process(const Lidar_3DOD_2022::object_msg_arr objs){
     //car
     cv::rectangle(src, cv::Rect(236,525,20,50), cv::Scalar(150,100,0), 20, 8, 0);
 
-    // //object
-    // for (int i = 0; i < objs.objc; i++){
-    //     float uCor = 236 - objs.object_msg_arr[i].y * METRETOPIXEL;
-    //     float vCor = 525 - objs.object_msg_arr[i].x * METRETOPIXEL;
-    //     float uSiz = (objs.object_msg_arr[i].yMax - objs.object_msg_arr[i].yMin) * METRETOPIXEL;
-    //     float vSiz = (objs.object_msg_arr[i].xMax - objs.object_msg_arr[i].xMin) * METRETOPIXEL;
-        
-    //     cv::rectangle(src, cv::Rect(uCor - uSiz/2, vCor - vSiz/2, uSiz, vSiz), cv::Scalar(0,255,205), -1, 8, 0); //obj size
-    //     cv::circle(src,cv::Point(uCor,vCor),3.5,cv::Scalar(0,0,255),-1); //center point
-    // }
-
     //object
-    for (Lidar_3DOD_2022::object_msg msgobj : objs.object_msg_arr){
+    for (const Lidar_3DOD_2022::object_msg& msgobj : objs->object_msg_arr){
         float uCor = 236 - msgobj.y * METRETOPIXEL;
         float vCor = 525 - msgobj.x * METRETOPIXEL;
         float uSiz = (msgobj.yMax - msgobj.yMin) * METRETOPIXEL;

@@ -8,10 +8,12 @@ void ransac_process(const sensor_msgs::PointCloud2ConstPtr& aft_ROI){
     pcl::fromROSMsg(*aft_ROI,tmp);
     PCXYZI TotalCloud;
     copyPointCloud(tmp,TotalCloud);
+
     //-----------UpSampling-----------
     PCXYZI::Ptr upsampledCloud (new PCXYZI);
     if( switch_UpSampling ) UpSampling(TotalCloud,upsampledCloud);
     else *upsampledCloud = TotalCloud;
+
     //----------ransac----------
     if( switch_RanSaC ) RanSaC(upsampledCloud);
     else{
@@ -19,6 +21,7 @@ void ransac_process(const sensor_msgs::PointCloud2ConstPtr& aft_ROI){
         pub_process(*upsampledCloud, output); 
         pub_RS.publish(output); 
     }
+    
     RT1.end_cal("ransac");
 }
 
