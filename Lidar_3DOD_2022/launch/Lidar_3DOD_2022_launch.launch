@@ -61,7 +61,7 @@
     <param name="REMOVE_FACTOR" value="0.2"/>
 
     <!--DYFilter parameter-->
-    <param name="Ransac_Z_ROI" value="-0.85"/>
+    <param name="Ransac_Z_ROI" value="-0.75"/>
   </node>
 
   <node pkg="Lidar_3DOD_2022" type="Lidar_visual" name="visualization_node" output="screen">
