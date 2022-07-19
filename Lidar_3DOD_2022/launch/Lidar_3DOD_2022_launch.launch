@@ -2,7 +2,7 @@
 
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
 <!--
-  <node pkg="rviz" type="rviz" name="rviz" args="-f velodyne"/> 
+  <node pkg="rviz" type="rviz" name="rviz" args=""/> 
 -->
 
 <!--

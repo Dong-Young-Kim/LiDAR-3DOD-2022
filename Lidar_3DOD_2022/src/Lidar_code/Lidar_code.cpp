@@ -119,29 +119,15 @@ void Clustering (PCXYZI::Ptr inputCloud, PCXYZI& retCloud, bool switch_DBscan, b
 
 void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl::PointIndices>& cluster_indices){
     int cluSz = cluster_indices.size();
-    vector<float> obj_x(cluSz); vector<float> obj_y(cluSz); vector<float> obj_z(cluSz);
-    vector<float> obj_xMin(cluSz); vector<float> obj_yMin(cluSz); vector<float> obj_zMin(cluSz);
-    vector<float> obj_xMax(cluSz); vector<float> obj_yMax(cluSz); vector<float> obj_zMax(cluSz);
+    vector<float> obj_x   ; vector<float> obj_y   ; vector<float> obj_z   ;
+    vector<float> obj_xMin; vector<float> obj_yMin; vector<float> obj_zMin;
+    vector<float> obj_xMax; vector<float> obj_yMax; vector<float> obj_zMax;
 
     vector<pair<PXYZI,string>> sorted_OBJ; //여기에 minmax가 포함되지 않아서 발생한 문제이므로 이를 포함하는 struct를 만들자
-    struct objInfo {
-        pcl::PointIndices* objPoints;
-        float x;
-        float y;
-        float z;
-        float xMin;
-        float yMin;
-        float zMin;
-        float xMax;
-        float yMax;
-        float zMax;
-        string classes;
-        unsigned int idx;
-    };
     vector<struct objInfo> objs;
 
-    int j = 0;
-    for (vector<pcl::PointIndices>::iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it, j++){
+    int intensityValue = 0;
+    for (vector<pcl::PointIndices>::iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it, intensityValue++){
 
         pair<float,float> x(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest()); //first = min, second = max
         pair<float,float> y(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest());
@@ -149,7 +135,7 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
 
     	for (std::vector<int>::const_iterator pit = it->indices.begin(); pit != it->indices.end(); ++pit){
             PXYZI pt = inputCloud->points[*pit];
-            pt.intensity = j % 10;
+            pt.intensity = intensityValue % 10;
             retCloud.push_back(pt);
             if(pt.x < x.first)      x.first = pt.x;
             if(pt.x > x.second)     x.second = pt.x;
@@ -168,9 +154,9 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
                             x.first, y.first, z.first, x.second, y.second, z.second};
         objs.push_back(tmp_obj);
 
-        obj_x[j] = tmp->x; obj_y[j] = tmp->y; obj_z[j] = MidPt(z.first,z.second);
-        obj_xMin[j] = x.first; obj_yMin[j] = y.first; obj_zMin[j] = z.first;
-        obj_xMax[j] = x.second; obj_yMax[j] = y.second; obj_zMax[j] = z.second;
+        obj_x   .push_back(tmp->x);   obj_y   .push_back(tmp->y);   obj_z   .push_back(MidPt(z.first,z.second));
+        obj_xMin.push_back(x.first);  obj_yMin.push_back(y.first);  obj_zMin.push_back(z.first);
+        obj_xMax.push_back(x.second); obj_yMax.push_back(y.second); obj_zMax.push_back(z.second);
     }
 
     cout << "sorted obj size" << sorted_OBJ.size() << endl;

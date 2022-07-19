@@ -98,6 +98,22 @@ bool switch_DBscan;
 bool switch_visual;
 bool switch_visual_2D;
 
+//cluster information struct using at after clustering
+struct objInfo {
+    pcl::PointIndices* objPoints;
+    float x;
+    float y;
+    float z;
+    float xMin;
+    float yMin;
+    float zMin;
+    float xMax;
+    float yMax;
+    float zMax;
+    string classes;
+    unsigned int idx;
+};
+
 //func
 void ROI(const sensor_msgs::PointCloud2ConstPtr&);
 void makeCropBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
@@ -121,7 +137,10 @@ void object_msg_process();
 class Filter{
 public:
     void DY_filter(vector<pair<PXYZI,string>>& sorted_OBJ, bool flag);
+    void DY_filter(struct objInfo& obj, bool flag);
     void jiwon_filter(vector<pair<PXYZI,string>>& sorted_OBJ, bool flag);
+    void jiwon_filter(struct objInfo& obj, bool flag);
+
 };
 Filter FT;
 
@@ -161,7 +180,8 @@ void pub_process(T& input, sensor_msgs::PointCloud2& output){
     pcl::PCLPointCloud2 tmp_PCL;                               //declare PCL_PC2
     pcl::toPCLPointCloud2(input, tmp_PCL);                     //PC -> PCL_PC2
     pcl_conversions::fromPCL(tmp_PCL, output);                 //PCL_PC2 -> sensor_msg_PC2
-    output.header.frame_id = "velodyne";
+    output.header.stamp = ros::Time::now();
+    output.header.frame_id = "map";
 }
 
 #endif
