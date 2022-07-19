@@ -125,6 +125,7 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
 
     vector<pair<PXYZI,string>> sorted_OBJ; //여기에 minmax가 포함되지 않아서 발생한 문제이므로 이를 포함하는 struct를 만들자
     struct objInfo {
+        pcl::PointIndices* objPoints;
         float x;
         float y;
         float z;
@@ -140,10 +141,12 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
     vector<struct objInfo> objs;
 
     int j = 0;
-    for (vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it, j++){
+    for (vector<pcl::PointIndices>::iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it, j++){
+
         pair<float,float> x(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest()); //first = min, second = max
-        pair<float,float> y(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest()); 
-        pair<float,float> z(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest()); 
+        pair<float,float> y(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest());
+        pair<float,float> z(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest());
+
     	for (std::vector<int>::const_iterator pit = it->indices.begin(); pit != it->indices.end(); ++pit){
             PXYZI pt = inputCloud->points[*pit];
             pt.intensity = j % 10;
@@ -153,14 +156,15 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
             if(pt.y < y.first)      y.first = pt.y ;
             if(pt.y > y.second)     y.second = pt.y; 
             if(pt.z < z.first)      z.first = pt.z;
-            if(pt.z > z.second)     z.second = pt.z;  
+            if(pt.z > z.second)     z.second = pt.z;
     	}
+
         PXYZI* tmp = new PXYZI();
         tmp->x = MidPt(x.first,x.second); tmp->y = MidPt(y.first,y.second); tmp->z = z.first; //z = min
         pair<PXYZI,string> temp = make_pair(*tmp,send_msg_minmax(x.first, x.second, y.first, y.second));
         sorted_OBJ.push_back(temp);
 
-        objInfo tmp_obj = {MidPt(x.first,x.second), MidPt(y.first,y.second), MidPt(z.first,z.second),
+        objInfo tmp_obj = {&(*it), MidPt(x.first,x.second), MidPt(y.first,y.second), MidPt(z.first,z.second),
                             x.first, y.first, z.first, x.second, y.second, z.second};
         objs.push_back(tmp_obj);
 
