@@ -137,10 +137,9 @@ void object_msg_process();
 class Filter{
 public:
     void DY_filter(vector<pair<PXYZI,string>>& sorted_OBJ, bool flag);
-    void DY_filter(struct objInfo& obj, bool flag);
+    void DY_filter(vector<objInfo>& objs, bool flag);
     void jiwon_filter(vector<pair<PXYZI,string>>& sorted_OBJ, bool flag);
-    void jiwon_filter(struct objInfo& obj, bool flag);
-
+    void jiwon_filter(vector<objInfo>& objs, bool flag);
 };
 Filter FT;
 
