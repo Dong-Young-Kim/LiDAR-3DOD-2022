@@ -136,7 +136,7 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
     	for (std::vector<int>::const_iterator pit = it->indices.begin(); pit != it->indices.end(); ++pit){
             PXYZI pt = inputCloud->points[*pit];
             pt.intensity = intensityValue % 10;
-            retCloud.push_back(pt);
+            retCloud.push_back(pt); //change >> not make retcloud here  >> make at filter
             if(pt.x < x.first)      x.first = pt.x;
             if(pt.x > x.second)     x.second = pt.x;
             if(pt.y < y.first)      y.first = pt.y ;
