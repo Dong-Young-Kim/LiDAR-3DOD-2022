@@ -56,7 +56,7 @@ void Filter::jiwon_filter(vector<objInfo>& objs, bool flag) {
             if(((abs(iit->x - jit->x) <= REMOVE_FACTOR) && (abs(iit->y - jit->y) <= REMOVE_FACTOR))){
                 cout << "jiwon_Filter erase obj info " << endl;
                 //iit->objPoints->indices += jit->objPoints->indices;
-                //iit->objPoints->indices.
+                cout << "indices size" << iit->objPoints->indices.size() << endl;
                 jit = objs.erase(jit); //edit object vector
             }
             else{

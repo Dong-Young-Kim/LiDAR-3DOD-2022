@@ -169,7 +169,8 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
 
     //print_OBJ(sorted_OBJ);
     msg_process(sorted_OBJ);
-    cout << "ssorted obj size after  filter  " << sorted_OBJ.size() << endl;
+    cout << "sorted obj size after  filter  " << sorted_OBJ.size() << endl;
+    cout << "sorted obj size after  filter  " << objs.size() << endl;
 
 
     {//메시지 발행으로 임시로 넣어놓은 코드
