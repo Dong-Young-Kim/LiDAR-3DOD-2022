@@ -3,7 +3,7 @@
 using namespace std;
 
 void ransac_process(const sensor_msgs::PointCloud2ConstPtr& aft_ROI){
-    RT1.start();
+    RT::start();
     PCXYZI tmp;
     pcl::fromROSMsg(*aft_ROI,tmp);
     PCXYZI TotalCloud;
@@ -22,7 +22,7 @@ void ransac_process(const sensor_msgs::PointCloud2ConstPtr& aft_ROI){
         pub_RS.publish(output); 
     }
     
-    RT1.end_cal("ransac");
+    RT::end_cal("ransac");
 }
 
 int main(int argc, char** argv){

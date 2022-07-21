@@ -112,8 +112,9 @@ struct objInfo {
     float xMax;
     float yMax;
     float zMax;
+    short intensity;
     string classes;
-    unsigned int idx;
+    unsigned short idx;
 };
 
 //func
@@ -159,18 +160,20 @@ public:
     // Update
     void update();
 };
-Fps FPS1;
 
 class RT{
 public:
-    double prev_clock;
-    double cur_clock;
-    double interval;
     RT();
-    void start();
-    void end_cal(const char*);
+    static void start();
+    static void end_cal(const char*);
+private:
+    static double prev_clock;
+    static double cur_clock;
+    static double interval;
 };
-RT RT1;
+double RT::prev_clock;
+double RT::cur_clock;
+double RT::interval;
 
 inline float cal_dist(float x, float y){ return sqrt(x*x+y*y); }
 inline float MidPt(float a, float b){ return (a + b) / 2; }

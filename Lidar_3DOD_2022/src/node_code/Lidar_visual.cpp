@@ -5,7 +5,7 @@ using namespace std;
 pcl::visualization::PCLVisualizer* viewer;
 
 void visual_process(const sensor_msgs::PointCloud2ConstPtr& aft_preClustering){
-    RT1.start();
+    RT::start();
     pcl::PointCloud<pcl::PointXYZI>::Ptr to_show(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::fromROSMsg(*aft_preClustering, *to_show);
 
@@ -14,7 +14,7 @@ void visual_process(const sensor_msgs::PointCloud2ConstPtr& aft_preClustering){
     // viewer->updatePointCloud(to_show, h1, "h1");
     if (viewer->contains("h1")) viewer->updatePointCloud(to_show, h1, "h1");
     else viewer->addPointCloud(to_show, h1, "h1");
-    RT1.end_cal("visual");
+    RT::end_cal("visual");
 }
 
 int main(int argc, char** argv){

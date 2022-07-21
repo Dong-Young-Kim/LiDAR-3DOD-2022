@@ -2,8 +2,10 @@
 
 using namespace std;
 
+Fps FPS1;
+
 void Clustering_process(const sensor_msgs::PointCloud2ConstPtr& aft_ransac){
-    RT1.start();
+    RT::start();
     PCXYZI tmp;
     pcl::fromROSMsg(*aft_ransac,tmp);
     PCXYZI::Ptr upsampledCloud (new PCXYZI);;
@@ -15,7 +17,7 @@ void Clustering_process(const sensor_msgs::PointCloud2ConstPtr& aft_ransac){
     //-----------clustering------------
     PCXYZI Fin_Cloud;
     Clustering(filteredCloud, Fin_Cloud, switch_DBscan, switch_Euclid);
-    RT1.end_cal("clustering");
+    RT::end_cal("clustering");
     FPS1.update();
     //cout << "-------------------------------------------------" << endl;
 }

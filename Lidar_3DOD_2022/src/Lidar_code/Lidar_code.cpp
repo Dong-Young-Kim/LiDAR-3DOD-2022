@@ -4,7 +4,7 @@
 using namespace std;
 
 void ROI(const sensor_msgs::PointCloud2ConstPtr& scan){
-    RT1.start();
+    RT::start();
     PCXYZI rawData;
     PCXYZI cropedData;
     pcl::fromROSMsg(*scan,rawData);
@@ -21,7 +21,7 @@ void ROI(const sensor_msgs::PointCloud2ConstPtr& scan){
     sensor_msgs::PointCloud2 output;                        //to output ROIdata formed PC2
     pub_process(rawData,output);
     pub_ROI.publish(output);
-    RT1.end_cal("ROI");
+    RT::end_cal("ROI");
 }
 
 void makeCropBox (PCXYZI& Cloud, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax){
@@ -124,7 +124,7 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
     vector<float> obj_xMax; vector<float> obj_yMax; vector<float> obj_zMax;
 
     vector<pair<PXYZI,string>> sorted_OBJ; //여기에 minmax가 포함되지 않아서 발생한 문제이므로 이를 포함하는 struct를 만들자
-    vector<struct objInfo> objs;
+    vector<struct objInfo> objs; //filter 
 
     int intensityValue = 0;
     for (vector<pcl::PointIndices>::iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it, intensityValue++){
@@ -139,20 +139,20 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
             retCloud.push_back(pt); //change >> not make retcloud here  >> make at filter
             if(pt.x < x.first)      x.first = pt.x;
             if(pt.x > x.second)     x.second = pt.x;
-            if(pt.y < y.first)      y.first = pt.y ;
-            if(pt.y > y.second)     y.second = pt.y; 
+            if(pt.y < y.first)      y.first = pt.y;
+            if(pt.y > y.second)     y.second = pt.y;
             if(pt.z < z.first)      z.first = pt.z;
             if(pt.z > z.second)     z.second = pt.z;
     	}
 
         PXYZI* tmp = new PXYZI();
-        tmp->x = MidPt(x.first,x.second); tmp->y = MidPt(y.first,y.second); tmp->z = z.first; //z = min
+        tmp->x = MidPt(x.first,x.second); tmp->y = MidPt(y.first,y.second); tmp->z = z.second; //z = max
         pair<PXYZI,string> temp = make_pair(*tmp,send_msg_minmax(x.first, x.second, y.first, y.second));
         sorted_OBJ.push_back(temp);
 
         objInfo tmp_obj = {&(*it), MidPt(x.first,x.second), MidPt(y.first,y.second), MidPt(z.first,z.second),
                             x.first, y.first, z.first, x.second, y.second, z.second,
-                            "unkown", intensityValue};
+                            intensityValue % 10, "unkown", intensityValue};
         objs.push_back(tmp_obj);
 
         obj_x   .push_back(tmp->x);   obj_y   .push_back(tmp->y);   obj_z   .push_back(MidPt(z.first,z.second));
@@ -163,9 +163,22 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
     cout << "sorted obj size before filter  " << sorted_OBJ.size() << endl;
     //cout << "------------------ DF & JF ------------------" << endl;
     FT.DY_filter(sorted_OBJ, switch_DY_filter);
+    cout << "sorted obj size after DY filter  " << sorted_OBJ.size() << endl;
+
     FT.DY_filter(objs, switch_DY_filter); //indices vector를 수정하는 filter
     FT.jiwon_filter(sorted_OBJ, switch_jiwon_filter);
     FT.jiwon_filter(objs, switch_jiwon_filter); //indices vector를 수정하는 filter
+
+    //apply filter result to PointCloud (make later as function)
+    retCloud.clear();
+    pcl::PointIndices tmpPntIdcs;
+    for(objInfo obj : objs) {
+        tmpPntIdcs.indices.insert(tmpPntIdcs.indices.end(), obj.objPoints->indices.begin(), obj.objPoints->indices.end());
+    }
+    pcl::copyPointCloud<PXYZI>(*inputCloud, tmpPntIdcs, retCloud);
+
+    cout << "input size  " << inputCloud->size() << "  return size  " << retCloud.size() << endl;  
+
 
     //print_OBJ(sorted_OBJ);
     msg_process(sorted_OBJ);

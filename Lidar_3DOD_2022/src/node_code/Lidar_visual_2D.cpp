@@ -7,7 +7,7 @@ string img;
 #define METRETOPIXEL 29.1 //convert to real object size(m) to pixel size
 
 void flat_visual_process(const Lidar_3DOD_2022::object_msg_arrConstPtr& objs){
-    RT1.start();
+    RT::start();
 
     cv::Mat src = cv::imread(img, cv::IMREAD_COLOR);
 
@@ -29,7 +29,7 @@ void flat_visual_process(const Lidar_3DOD_2022::object_msg_arrConstPtr& objs){
     cv::waitKey(2);
 
 
-    RT1.end_cal("visual");
+    RT::end_cal("visual");
     cout << "-------------------------------------------------" << endl;
 }
 
