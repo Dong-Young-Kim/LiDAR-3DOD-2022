@@ -151,7 +151,8 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
         sorted_OBJ.push_back(temp);
 
         objInfo tmp_obj = {&(*it), MidPt(x.first,x.second), MidPt(y.first,y.second), MidPt(z.first,z.second),
-                            x.first, y.first, z.first, x.second, y.second, z.second};
+                            x.first, y.first, z.first, x.second, y.second, z.second,
+                            "unkown", intensityValue};
         objs.push_back(tmp_obj);
 
         obj_x   .push_back(tmp->x);   obj_y   .push_back(tmp->y);   obj_z   .push_back(MidPt(z.first,z.second));
@@ -159,13 +160,16 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
         obj_xMax.push_back(x.second); obj_yMax.push_back(y.second); obj_zMax.push_back(z.second);
     }
 
-    cout << "sorted obj size" << sorted_OBJ.size() << endl;
+    cout << "sorted obj size before filter  " << sorted_OBJ.size() << endl;
     //cout << "------------------ DF & JF ------------------" << endl;
     FT.DY_filter(sorted_OBJ, switch_DY_filter);
+    FT.DY_filter(objs, switch_DY_filter); //indices vector를 수정하는 filter
     FT.jiwon_filter(sorted_OBJ, switch_jiwon_filter);
+    FT.jiwon_filter(objs, switch_jiwon_filter); //indices vector를 수정하는 filter
+
     //print_OBJ(sorted_OBJ);
     msg_process(sorted_OBJ);
-    cout << "sorted obj size" << sorted_OBJ.size() << endl;
+    cout << "ssorted obj size after  filter  " << sorted_OBJ.size() << endl;
 
 
     {//메시지 발행으로 임시로 넣어놓은 코드
@@ -194,8 +198,8 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
             msgCpnt.xMax = obj.xMax;
             msgCpnt.yMax = obj.yMax;
             msgCpnt.zMax = obj.zMax;
-            msgCpnt.classes = "unkwown";
-            msgCpnt.idx = 0;
+            msgCpnt.classes = obj.classes;
+            msgCpnt.idx = obj.idx;
             msgConvertVector.push_back(msgCpnt);
         }
         msg.object_msg_arr = msgConvertVector;

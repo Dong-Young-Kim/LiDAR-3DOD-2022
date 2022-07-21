@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef LIDAR_DECLARE
 #define LIDAR_DECLARE
 #include <iostream>
@@ -140,6 +142,8 @@ public:
     void DY_filter(vector<objInfo>& objs, bool flag);
     void jiwon_filter(vector<pair<PXYZI,string>>& sorted_OBJ, bool flag);
     void jiwon_filter(vector<objInfo>& objs, bool flag);
+    inline bool check_in(PXYZI a, PXYZI b) { return ((abs(a.x - b.x) <= REMOVE_FACTOR) && (abs(a.y - b.y) <= REMOVE_FACTOR)); }
+    void generate_return_PointCloud(PCXYZI& returnCloud, vector<objInfo>& objs);
 };
 Filter FT;
 
@@ -171,7 +175,6 @@ RT RT1;
 inline float cal_dist(float x, float y){ return sqrt(x*x+y*y); }
 inline float MidPt(float a, float b){ return (a + b) / 2; }
 inline void print_coord(PXYZI tmp){ cout << fixed << setprecision(3) <<"dist : " << cal_dist(tmp.x,tmp.y) << "    x : "<<tmp.x << "    y : "<< tmp.y <<endl; }
-inline bool check_in(PXYZI a, PXYZI b) { return ((abs(a.x - b.x) <= REMOVE_FACTOR) && (abs(a.y - b.y) <= REMOVE_FACTOR)); }
 inline void print_OBJ(vector<pair<PXYZI,string>>& sorted_OBJ){ for(int i = 0; i < sorted_OBJ.size(); i++) print_coord(sorted_OBJ[i].first); }
 
 template<typename T> //this func is used all code
