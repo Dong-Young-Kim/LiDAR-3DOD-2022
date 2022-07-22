@@ -20,9 +20,9 @@ void Filter::DY_filter(vector<objInfo>& objs, bool flag){
     for (vector<objInfo>::iterator it = objs.begin(); it != objs.end();){
 
         if (it->zMax < Ransac_Z_ROI){
-            // cout << "\033[1;42mDY_Filter erase obj info\033[0m ";
-            // cout << "  z max = " << it->zMax;
-            // cout << "  z center = " << it->z << endl;
+            cout << "\033[1;7mDY_Filter erase obj info\033[0m ";
+            cout << "  z max = " << it->zMax;
+            cout << "  z center = " << it->z << endl;
             it = objs.erase(it); //edit object vector
         }
         else it++;
@@ -58,7 +58,7 @@ void Filter::jiwon_filter(vector<objInfo>& objs, bool flag) {
         for(jit; jit != objs.end();){
 
             if(((abs(iit->x - jit->x) <= REMOVE_FACTOR) && (abs(iit->y - jit->y) <= REMOVE_FACTOR))){
-                cout << "\033[1;42mjiwon_Filter merged\033[0m" << endl;
+                cout << "\033[1;46mjiwon_Filter merged\033[0m" << endl;
 
                 //edit obj info
                 iit->x = (iit->x + jit->x) / 2;

@@ -160,10 +160,8 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
         obj_xMax.push_back(x.second); obj_yMax.push_back(y.second); obj_zMax.push_back(z.second);
     }
 
-    cout << "sorted obj size before filter  " << sorted_OBJ.size() << endl;
     //cout << "------------------ DF & JF ------------------" << endl;
     FT.DY_filter(sorted_OBJ, switch_DY_filter);
-    cout << "sorted obj size after DY filter  " << sorted_OBJ.size() << endl;
 
     FT.DY_filter(objs, switch_DY_filter); //indices vector를 수정하는 filter
     FT.jiwon_filter(sorted_OBJ, switch_jiwon_filter);
@@ -178,15 +176,8 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
     // pcl::copyPointCloud<PXYZI>(*inputCloud, tmpPntIdcs, retCloud);
     FT.generate_return_PointCloud(inputCloud, retCloud, objs);
     
-
-    cout << "input size  " << inputCloud->size() << "  return size  " << retCloud.size() << endl;  
-
-
     //print_OBJ(sorted_OBJ);
     msg_process(sorted_OBJ);
-    cout << "sorted obj size after  filter  " << sorted_OBJ.size() << endl;
-    cout << "sorted obj size after  filter  " << objs.size() << endl;
-
 
     {//메시지 발행으로 임시로 넣어놓은 코드
         Lidar_3DOD_2022::obj_msg msg;
