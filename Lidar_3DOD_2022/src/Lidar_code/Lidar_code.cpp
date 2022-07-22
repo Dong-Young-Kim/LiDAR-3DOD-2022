@@ -170,12 +170,14 @@ void afterClusteringProcess(PCXYZI::Ptr inputCloud, PCXYZI& retCloud, vector<pcl
     FT.jiwon_filter(objs, switch_jiwon_filter); //indices vector를 수정하는 filter
 
     //apply filter result to PointCloud (make later as function)
-    retCloud.clear();
-    pcl::PointIndices tmpPntIdcs;
-    for(objInfo obj : objs) {
-        tmpPntIdcs.indices.insert(tmpPntIdcs.indices.end(), obj.objPoints->indices.begin(), obj.objPoints->indices.end());
-    }
-    pcl::copyPointCloud<PXYZI>(*inputCloud, tmpPntIdcs, retCloud);
+    // retCloud.clear();
+    // pcl::PointIndices tmpPntIdcs;
+    // for(objInfo obj : objs) {
+    //     tmpPntIdcs.indices.insert(tmpPntIdcs.indices.end(), obj.objPoints->indices.begin(), obj.objPoints->indices.end());
+    // }
+    // pcl::copyPointCloud<PXYZI>(*inputCloud, tmpPntIdcs, retCloud);
+    FT.generate_return_PointCloud(inputCloud, retCloud, objs);
+    
 
     cout << "input size  " << inputCloud->size() << "  return size  " << retCloud.size() << endl;  
 

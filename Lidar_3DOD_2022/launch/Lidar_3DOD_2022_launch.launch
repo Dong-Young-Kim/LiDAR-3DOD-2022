@@ -58,7 +58,7 @@
     <param name="switch_DY_filter" value="true"/>
 
     <!--jiwonFilter parameter-->
-    <param name="REMOVE_FACTOR" value="0.1"/>
+    <param name="REMOVE_FACTOR" value="0.2"/>
 
     <!--DYFilter parameter-->
     <param name="Ransac_Z_ROI" value="-0.75"/>

@@ -81,3 +81,16 @@ void Filter::jiwon_filter(vector<objInfo>& objs, bool flag) {
 
     }
 }
+
+void Filter::generate_return_PointCloud(PCXYZI::Ptr inputCloud, PCXYZI& returnCloud, vector<objInfo>& objs){
+    short intensity = 0; //color PointCloud to seperate each cluster
+    returnCloud.clear();
+    for (const objInfo& obj : objs){
+        for(const int& idx : obj.objPoints->indices){
+            PXYZI tmpInput = inputCloud->points[idx];
+            tmpInput.intensity = (intensity) % 10;
+            returnCloud.push_back(tmpInput);
+        }
+        intensity++;
+    }
+}

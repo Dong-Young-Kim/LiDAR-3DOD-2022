@@ -144,21 +144,20 @@ public:
     void jiwon_filter(vector<pair<PXYZI,string>>& sorted_OBJ, bool flag);
     void jiwon_filter(vector<objInfo>& objs, bool flag);
     inline bool check_in(PXYZI a, PXYZI b) { return ((abs(a.x - b.x) <= REMOVE_FACTOR) && (abs(a.y - b.y) <= REMOVE_FACTOR)); }
-    void generate_return_PointCloud(PCXYZI& returnCloud, vector<objInfo>& objs);
+    void generate_return_PointCloud(PCXYZI::Ptr inputCloud, PCXYZI& returnCloud, vector<objInfo>& objs);
 };
 Filter FT;
 
 class Fps{
 public:
+    Fps();
+    void update();
+private:
     double prev_clock;
     double cur_clock;
     double interval;
     double m_fps;
     size_t m_count;
-
-    Fps();
-    // Update
-    void update();
 };
 
 class RT{
