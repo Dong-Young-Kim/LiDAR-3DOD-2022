@@ -73,4 +73,8 @@
     <param name="location" value="$(find Lidar_3DOD_2022)/include/Lidar_3DOD_2022/plane.png"/>
   </node>
 
+  <node pkg="Lidar_3DOD_2022" type="Lidar_delivery_filter" name="delivery_filter_node" output="screen">
+
+  </node>
+
 </launch>

@@ -77,6 +77,9 @@ target_link_libraries(Lidar_visual Lidar_code)
 add_executable(Lidar_visual_2D src/node_code/Lidar_visual_2D.cpp)
 target_link_libraries(Lidar_visual_2D Lidar_code)
 
+add_executable(Lidar_delivery_filter src/node_code/Lidar_delivery_filter.cpp)
+target_link_libraries(Lidar_delivery_filter Lidar_code)
+
 # install(TARGETS Lidar_visual_2D
 # 	ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 # 	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
