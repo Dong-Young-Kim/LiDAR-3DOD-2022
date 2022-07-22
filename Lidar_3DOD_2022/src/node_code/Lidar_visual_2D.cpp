@@ -28,9 +28,7 @@ void flat_visual_process(const Lidar_3DOD_2022::object_msg_arrConstPtr& objs){
     cv::imshow("Lidar Detected objs", src);
     cv::waitKey(2);
 
-
     RT::end_cal("visual");
-    cout << "\033[1;34m--------------------------------------------------------\033[0m" << endl;
 }
 
 int main(int argc, char** argv){

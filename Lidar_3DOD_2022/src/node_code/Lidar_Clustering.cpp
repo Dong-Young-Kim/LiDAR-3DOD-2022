@@ -19,7 +19,6 @@ void Clustering_process(const sensor_msgs::PointCloud2ConstPtr& aft_ransac){
     Clustering(filteredCloud, Fin_Cloud, switch_DBscan, switch_Euclid);
     RT::end_cal("clustering");
     FPS1.update();
-    //cout << "-------------------------------------------------" << endl;
 }
 
 int main(int argc, char** argv){

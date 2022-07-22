@@ -17,6 +17,8 @@ void Fps::update(){
     printf("\tFPS : \033[1;35m%.1f\033[0m frame/sec", m_fps);
     printf("\tLoop %zu\n", m_count);
     if (interval > 0.1) printf("\033[1;93m[WARN] low speed warning\033[0m\n");
+    printf("\033[2m────────────────────────────");
+    printf("────────────────────────────\033[0m\n");
 }
 
 RT::RT(){}
